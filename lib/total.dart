@@ -21,6 +21,9 @@ class _TotalLabelState extends State<TotalLabel> {
   @override
   void initState() {
     super.initState();
+    widget.valtotkg.addListener(() {
+      setState(() {});
+    });
     widget.valtotNm.addListener(() {
       setState(() {});
     });
@@ -31,7 +34,8 @@ class _TotalLabelState extends State<TotalLabel> {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: Text(
-          "masse totale : " +
+          currentPlane.name +
+              "  masse totale : " +
               widget.valtotkg.value.toString() +
               " kg, bras de levier : " +
               widget.valtotNm.value.toString() +
@@ -46,7 +50,8 @@ class _TotalLabelState extends State<TotalLabel> {
             min(
                 currentPlane.gabarit[1].y +
                     (currentPlane.gabarit[2].y - currentPlane.gabarit[1].y) /
-                        (currentPlane.gabarit[2].x - currentPlane.gabarit[1].x) *
+                        (currentPlane.gabarit[2].x -
+                            currentPlane.gabarit[1].x) *
                         (widget.valtotNm.value - currentPlane.gabarit[1].x),
                 currentPlane.gabarit[2].y) &&
         widget.valtotNm.value < currentPlane.gabarit[3].x;

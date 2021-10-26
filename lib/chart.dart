@@ -3,14 +3,6 @@ import 'dart:math';
 import 'package:centrage/values.dart';
 import 'package:flutter/material.dart';
 
-const List<Point> gabarit = [
-  Point(0.205, 566),
-  Point(0.205, 750),
-  Point(0.428, 900),
-  Point(0.564, 900),
-  Point(0.564, 566)
-];
-
 class Chart extends StatefulWidget {
   final ValueNotifier<double> totalkg;
   final ValueNotifier<double> totalNm;
@@ -63,7 +55,10 @@ class ChartPainter extends CustomPainter {
 
     double defaultHeight = 200;
 
-    double minNm = 0.200, maxNm = 0.600, minkg = 566, maxkg = 925;
+    double minNm = 0.200,
+        maxNm = 0.600,
+        minkg = currentPlane.gabarit[0].y.toDouble(),
+        maxkg = currentPlane.gabarit[3].y.toDouble();
     double Nm_PX = size.width / (maxNm - minNm);
     double kg_PX = defaultHeight / (maxkg - minkg);
 
@@ -72,7 +67,8 @@ class ChartPainter extends CustomPainter {
           defaultHeight - (currentPlane.gabarit[0].y - minkg) * kg_PX);
 
     paint.color = Colors.green;
-    for (Point pt in currentPlane.gabarit.sublist(1, currentPlane.gabarit.length)) {
+    for (Point pt
+        in currentPlane.gabarit.sublist(1, currentPlane.gabarit.length)) {
       arrowPath.lineTo(
           (pt.x - minNm) * Nm_PX, defaultHeight - (pt.y - minkg) * kg_PX);
     }
@@ -95,6 +91,6 @@ class ChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }
