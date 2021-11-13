@@ -1,5 +1,6 @@
 import 'package:centrage/chart.dart';
 import 'package:centrage/input.dart';
+import 'package:centrage/save.dart';
 import 'package:centrage/total.dart';
 import 'package:centrage/values.dart';
 import 'package:flutter/material.dart';
@@ -68,19 +69,30 @@ class _MyHomePageState extends State<MyHomePage> {
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.save),
+              tooltip: 'Save the configuration',
+              onPressed: () {
+                saveXslx(values);
+              },
+            ),
+          ],
         ),
         drawer: Drawer(
-            child: ListView(padding: EdgeInsets.zero, children: [
-          for (Plane plane in planeList)
-            ListTile(
-              title: Text(plane.name),
-              onTap: () {
-                currentPlane = plane;
-                setState(() {});
-                values.updateTot();
-              },
-            )
-        ])),
+            child: ListView(
+                padding: EdgeInsets.symmetric(vertical: 50.0),
+                children: [
+              for (Plane plane in planeList)
+                ListTile(
+                  title: Text(plane.name),
+                  onTap: () {
+                    currentPlane = plane;
+                    setState(() {});
+                    values.updateTot();
+                  },
+                )
+            ])),
         body: ListView.builder(
             itemCount: 6,
             itemBuilder: (BuildContext context, int index) {
