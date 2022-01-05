@@ -10,7 +10,7 @@ Future<void> saveXslx(Values val,String airplaneName) async {
   //print("__________________" + dir);
   var path = await getApplicationDocumentsDirectory();
   // print("__________________" + path.path);
-  String file = "$dir/"+airplaneName+"-feuille-centrage.xlsx";
+  String file = "$dir/"+airplaneName.toLowerCase()+"-feuille-centrage.xlsx";
   var bytes = File(file).readAsBytesSync();
   Excel excel = Excel.decodeBytes(bytes);
   /* 
@@ -44,7 +44,7 @@ Future<void> saveXslx(Values val,String airplaneName) async {
 
   var fileBytes = excel.save();
 
-  File(join("$dir/"+airplaneName+"-feuille-centrage_ed.xlsx"))
+  File(join("$dir/"+airplaneName.toLowerCase()+"-feuille-centrage_ed.xlsx"))
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes!);
 
