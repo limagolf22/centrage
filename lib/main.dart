@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
-                saveXslx(values);
+                saveXslx(values,currentPlane.name);
               },
             ),
           ],

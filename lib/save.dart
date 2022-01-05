@@ -1,17 +1,16 @@
 import 'dart:io';
 import 'package:centrage/values.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<void> saveXslx(Values val) async {
+Future<void> saveXslx(Values val,String airplaneName) async {
   var directory = await getExternalStorageDirectory();
   String dir = directory!.path;
   //print("__________________" + dir);
   var path = await getApplicationDocumentsDirectory();
   // print("__________________" + path.path);
-  String file = "$dir/f-ggxu-feuille-centrage.xlsx";
+  String file = "$dir/"+airplaneName+"-feuille-centrage.xlsx";
   var bytes = File(file).readAsBytesSync();
   Excel excel = Excel.decodeBytes(bytes);
   /* 
@@ -45,7 +44,7 @@ Future<void> saveXslx(Values val) async {
 
   var fileBytes = excel.save();
 
-  File(join("$dir/f-ggxu-feuille-centrage_ed.xlsx"))
+  File(join("$dir/"+airplaneName+"-feuille-centrage_ed.xlsx"))
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes!);
 

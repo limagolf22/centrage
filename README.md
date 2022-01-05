@@ -1,6 +1,6 @@
 # centrage
 
-A new Flutter project.
+A simple flutter App to adjust weight in your plane !
 
 ## Getting Started
 

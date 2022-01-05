@@ -27,6 +27,19 @@ List<Plane> planeList = [
       566,
       0.3595),
   Plane(
+      "F-GOVY",
+      [
+        Point(0.205, 566),
+        Point(0.205, 750),
+        Point(0.428, 900),
+        Point(0.564, 900),
+        Point(0.564, 566)
+      ],
+      {"fuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.3},
+      110,
+      566,
+      0.3595),
+  Plane(
       "F-GGXU",
       [
         Point(0.205, 581.9),
