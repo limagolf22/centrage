@@ -66,7 +66,7 @@ class ChartPainter extends CustomPainter {
       ..moveTo((currentPlane.gabarit[0].x - minNm) * Nm_PX,
           defaultHeight - (currentPlane.gabarit[0].y - minkg) * kg_PX);
 
-    paint.color = Colors.green;
+    paint.color = Colors.green.shade200;
     for (Point pt
         in currentPlane.gabarit.sublist(1, currentPlane.gabarit.length)) {
       arrowPath.lineTo(
@@ -76,13 +76,25 @@ class ChartPainter extends CustomPainter {
     arrowPath.close();
     canvas.drawPath(arrowPath, paint);
 
-    paint.color = Colors.red;
+    paint.color = Colors.orange;
     canvas.drawCircle(
         Offset((totalNm.value - minNm) * Nm_PX,
             defaultHeight - (totalkg.value - minkg) * kg_PX),
         4,
         paint);
+    paint.color = Colors.yellow;
 
+    canvas.drawCircle(
+        Offset((totalNmfuelMax - minNm) * Nm_PX,
+            defaultHeight - (totalkgfuelMax - minkg) * kg_PX),
+        3,
+        paint);
+    paint.color = Colors.red;
+    canvas.drawCircle(
+        Offset((totalNmfuelMin - minNm) * Nm_PX,
+            defaultHeight - (totalkgfuelMin - minkg) * kg_PX),
+        3,
+        paint);
     paint.color = Colors.black;
     canvas.drawLine(Offset(0, 0), Offset(0, defaultHeight), paint);
     canvas.drawLine(

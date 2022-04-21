@@ -56,6 +56,11 @@ List<Plane> planeList = [
 
 Plane currentPlane = planeList[0];
 
+double totalkgfuelMax = 0.0;
+double totalNmfuelMax = 0.0;
+double totalkgfuelMin = 0.0;
+double totalNmfuelMin = 0.0;
+
 class Values {
   ValueNotifier<double> fuel = new ValueNotifier(110.0);
   ValueNotifier<double> crew = new ValueNotifier(130.0);
@@ -63,7 +68,6 @@ class Values {
   ValueNotifier<double> freight = new ValueNotifier(0.0);
 
   ValueNotifier<double> totalkg = new ValueNotifier(0.0);
-
   ValueNotifier<double> totalNm = new ValueNotifier(0.0);
 
   Values() {
@@ -86,6 +90,32 @@ class Values {
                     pax.value * currentPlane.leverArm["pax"]! +
                     freight.value * currentPlane.leverArm["freight"]!) /
                 t_kg *
+                1000)
+            .round() /
+        1000;
+    totalkgfuelMax = currentPlane.massPlane +
+        currentPlane.maxFuel * 0.72 +
+        crew.value +
+        pax.value +
+        freight.value;
+    totalkgfuelMin =
+        currentPlane.massPlane + crew.value + pax.value + freight.value;
+    totalNmfuelMax = ((currentPlane.massPlane * currentPlane.laPlane +
+                    currentPlane.maxFuel *
+                        0.72 *
+                        currentPlane.leverArm["fuel"]! +
+                    crew.value * currentPlane.leverArm["crew"]! +
+                    pax.value * currentPlane.leverArm["pax"]! +
+                    freight.value * currentPlane.leverArm["freight"]!) /
+                totalkgfuelMax *
+                1000)
+            .round() /
+        1000;
+    totalNmfuelMin = ((currentPlane.massPlane * currentPlane.laPlane +
+                    crew.value * currentPlane.leverArm["crew"]! +
+                    pax.value * currentPlane.leverArm["pax"]! +
+                    freight.value * currentPlane.leverArm["freight"]!) /
+                totalkgfuelMin *
                 1000)
             .round() /
         1000;

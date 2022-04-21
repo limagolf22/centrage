@@ -5,6 +5,10 @@ import 'package:centrage/total.dart';
 import 'package:centrage/values.dart';
 import 'package:flutter/material.dart';
 
+enum SaveState { SAVED, NOTSAVED }
+
+SaveState saveS = SaveState.SAVED;
+
 void main() {
   runApp(const MyApp());
 }
@@ -15,6 +19,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    getDir();
     return MaterialApp(
       title: 'Centrage Flutter',
       theme: ThemeData(
@@ -27,9 +32,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: "Centrage Flutter Home Page"),
+      home: MyHomePage(title: "Centrage AC ENAC"),
     );
   }
 }
@@ -48,6 +53,24 @@ class _MyHomePageState extends State<MyHomePage> {
   Values values = new Values();
 
   @override
+  void initState() {
+    super.initState();
+    values.totalkg.addListener(() {
+      print(saveS);
+      if (saveS == SaveState.SAVED) {
+        saveS = SaveState.NOTSAVED;
+        setState(() {});
+      }
+    });
+    values.totalNm.addListener(() {
+      if (saveS == SaveState.SAVED) {
+        saveS = SaveState.NOTSAVED;
+        setState(() {});
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> childrenAdded = [
       Input(
@@ -59,11 +82,24 @@ class _MyHomePageState extends State<MyHomePage> {
       Input(min: 0.0, max: 250.0, valNot: values.crew, label: "crew "),
       Input(min: 0.0, max: 250.0, valNot: values.pax, label: "pax "),
       Input(min: 0.0, max: 65.0, valNot: values.freight, label: "freight "),
+      Text(
+        currentPlane.name,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
       SizedBox(
           height: 200,
           child: Chart(totalkg: values.totalkg, totalNm: values.totalNm)),
-      TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm)
+      TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
+      Text(dir == "" ? "" : "saved in : " + dir,
+          style: TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
     ];
+    // if (saveS == SaveState.SAVED) {
+    //   childrenAdded.insert(
+    //       0,
+    //       Text("saved in : " + dir,
+    //           style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))));
+    // }
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -71,10 +107,15 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           actions: <Widget>[
             IconButton(
+              color: saveS == SaveState.SAVED
+                  ? Color.fromARGB(255, 255, 255, 255)
+                  : Color.fromARGB(255, 255, 0, 0),
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
-                saveXslx(values,currentPlane.name);
+                saveS = SaveState.SAVED;
+                saveXslx(values, currentPlane.name);
+                setState(() {});
               },
             ),
           ],
@@ -94,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
             ])),
         body: ListView.builder(
-            itemCount: 6,
+            itemCount: 7,
             itemBuilder: (BuildContext context, int index) {
               return childrenAdded[index];
             }));

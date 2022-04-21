@@ -4,13 +4,16 @@ import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<void> saveXslx(Values val,String airplaneName) async {
+String dir = "";
+
+Future<void> getDir() async {
   var directory = await getExternalStorageDirectory();
-  String dir = directory!.path;
-  //print("__________________" + dir);
-  var path = await getApplicationDocumentsDirectory();
-  // print("__________________" + path.path);
-  String file = "$dir/"+airplaneName.toLowerCase()+"-feuille-centrage.xlsx";
+  dir = directory!.path;
+  print("__________________" + dir);
+}
+
+Future<void> saveXslx(Values val, String airplaneName) async {
+  String file = "$dir/" + airplaneName.toLowerCase() + "-feuille-centrage.xlsx";
   var bytes = File(file).readAsBytesSync();
   Excel excel = Excel.decodeBytes(bytes);
   /* 
@@ -44,10 +47,10 @@ Future<void> saveXslx(Values val,String airplaneName) async {
 
   var fileBytes = excel.save();
 
-  File(join("$dir/"+airplaneName.toLowerCase()+"-feuille-centrage_ed.xlsx"))
+  File(join("$dir/" + airplaneName.toLowerCase() + "-feuille-centrage_ed.xlsx"))
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes!);
 
   // printing cell-type
-  print("CellType: " + fuel.cellType.toString());
+  //print("CellType: " + fuel.cellType.toString());
 }

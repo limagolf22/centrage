@@ -34,11 +34,10 @@ class _TotalLabelState extends State<TotalLabel> {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: Text(
-          currentPlane.name +
-              "  masse totale : " +
-              widget.valtotkg.value.toString() +
+          "masse totale : " +
+              ((widget.valtotkg.value * 10).round() / 10).toString() +
               " kg, bras de levier : " +
-              widget.valtotNm.value.toString() +
+              ((widget.valtotNm.value * 1000).round() / 1000).toString() +
               " kg.m",
           style: TextStyle(color: inlimits() ? Colors.black : Colors.red),
           textAlign: TextAlign.center,
