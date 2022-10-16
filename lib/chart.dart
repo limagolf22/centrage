@@ -55,10 +55,22 @@ class ChartPainter extends CustomPainter {
 
     double defaultHeight = 200;
 
-    double minNm = 0.200,
-        maxNm = 0.600,
-        minkg = currentPlane.gabarit[0].y.toDouble(),
-        maxkg = currentPlane.gabarit[3].y.toDouble();
+    double minNm = currentPlane.gabarit
+            .reduce((current, next) => current.x < next.x ? current : next)
+            .x
+            .toDouble(),
+        maxNm = currentPlane.gabarit
+            .reduce((current, next) => current.x > next.x ? current : next)
+            .x
+            .toDouble(),
+        minkg = currentPlane.gabarit
+            .reduce((current, next) => current.y < next.y ? current : next)
+            .y
+            .toDouble(),
+        maxkg = currentPlane.gabarit
+            .reduce((current, next) => current.y > next.y ? current : next)
+            .y
+            .toDouble();
     double Nm_PX = size.width / (maxNm - minNm);
     double kg_PX = defaultHeight / (maxkg - minkg);
 
@@ -96,7 +108,7 @@ class ChartPainter extends CustomPainter {
         3,
         paint);
     paint.color = Colors.black;
-    canvas.drawLine(Offset(0, 0), Offset(0, defaultHeight), paint);
+    canvas.drawLine(const Offset(0, 0), Offset(0, defaultHeight), paint);
     canvas.drawLine(
         Offset(0, defaultHeight), Offset(size.width, defaultHeight), paint);
   }

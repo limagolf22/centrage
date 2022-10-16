@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:centrage/chart.dart';
 import 'package:flutter/material.dart';
 import 'package:centrage/values.dart';
+import 'package:poly_collisions/poly_collisions.dart';
 
 class TotalLabel extends StatefulWidget {
   final ValueNotifier<double> valtotkg;
@@ -39,7 +39,10 @@ class _TotalLabelState extends State<TotalLabel> {
               " kg, bras de levier : " +
               ((widget.valtotNm.value * 1000).round() / 1000).toString() +
               " kg.m",
-          style: TextStyle(color: inlimits() ? Colors.black : Colors.red),
+          style: TextStyle(
+              color: inlimitsConvex() ? Colors.black : Colors.red,
+              fontWeight:
+                  inlimitsConvex() ? FontWeight.normal : FontWeight.bold),
           textAlign: TextAlign.center,
         ));
   }
@@ -54,5 +57,10 @@ class _TotalLabelState extends State<TotalLabel> {
                         (widget.valtotNm.value - currentPlane.gabarit[1].x),
                 currentPlane.gabarit[2].y) &&
         widget.valtotNm.value < currentPlane.gabarit[3].x;
+  }
+
+  bool inlimitsConvex() {
+    return PolygonCollision.isPointInPolygon(currentPlane.gabarit,
+        Point(widget.valtotNm.value, widget.valtotkg.value));
   }
 }

@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     getDir();
     return MaterialApp(
-      title: 'Centrage Flutter',
+      title: 'Centrage AC ENAC',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -50,7 +50,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  Values values = new Values();
+  Values values = Values();
 
   @override
   void initState() {
@@ -72,34 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> childrenAdded = [
-      Input(
-          min: 0.0,
-          max: currentPlane.maxFuel,
-          valNot: values.fuel,
-          label: "fuel ")
-        ..unit = "L",
-      Input(min: 0.0, max: 250.0, valNot: values.crew, label: "crew "),
-      Input(min: 0.0, max: 250.0, valNot: values.pax, label: "pax "),
-      Input(min: 0.0, max: 65.0, valNot: values.freight, label: "freight "),
-      Text(
-        currentPlane.name,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
-      SizedBox(
-          height: 200,
-          child: Chart(totalkg: values.totalkg, totalNm: values.totalNm)),
-      TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
-      Text(dir == "" ? "" : "saved in : " + dir,
-          style: TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
-    ];
-    // if (saveS == SaveState.SAVED) {
-    //   childrenAdded.insert(
-    //       0,
-    //       Text("saved in : " + dir,
-    //           style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))));
-    // }
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -128,16 +100,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 ListTile(
                   title: Text(plane.name),
                   onTap: () {
-                    currentPlane = plane;
+                    // values.updateTot();
+                    values.resetNotifiers(plane);
                     setState(() {});
-                    values.updateTot();
+                    Navigator.pop(context);
                   },
                 )
             ])),
-        body: ListView.builder(
-            itemCount: 7,
-            itemBuilder: (BuildContext context, int index) {
-              return childrenAdded[index];
-            }));
+        body: Column(
+          children: [
+            Input(
+                min: 0.0,
+                max: currentPlane.maxFuel,
+                valNot: values.mainFuel,
+                label: "mainFuel ")
+              ..unit = "L",
+            Input(
+                min: 0.0,
+                max: currentPlane.maxAuxFuel,
+                valNot: values.auxFuel,
+                label: "auxFuel ")
+              ..unit = "L",
+            Input(min: 0.0, max: 250.0, valNot: values.crew, label: "crew "),
+            Input(min: 0.0, max: 250.0, valNot: values.pax, label: "pax "),
+            Input(
+                min: 0.0, max: 65.0, valNot: values.freight, label: "freight "),
+            Text(
+              currentPlane.name,
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+                height: 200,
+                child: Chart(totalkg: values.totalkg, totalNm: values.totalNm)),
+            TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
+            Text(dir == "" ? "" : "saved in : " + dir,
+                style: TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
+          ],
+        ));
   }
 }

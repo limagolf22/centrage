@@ -32,7 +32,7 @@ Future<void> saveXslx(Values val, String airplaneName) async {
   cellStyle.underline = Underline.Single; // or Underline.Double
 
   var fuel = sheetObject.cell(CellIndex.indexByString("E10"));
-  fuel.value = val.fuel.value; // dynamic values support provided;
+  fuel.value = val.mainFuel.value; // dynamic values support provided;
 
   var crew = sheetObject.cell(CellIndex.indexByString("C18"));
   crew.value = val.crew.value;
