@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:centrage/values.dart';
 import 'package:flutter/material.dart';
+import 'package:poly_collisions/poly_collisions.dart';
 
 class Chart extends StatefulWidget {
   final ValueNotifier<double> totalkg;
@@ -78,7 +80,7 @@ class ChartPainter extends CustomPainter {
       ..moveTo((currentPlane.gabarit[0].x - minNm) * Nm_PX,
           defaultHeight - (currentPlane.gabarit[0].y - minkg) * kg_PX);
 
-    paint.color = Colors.green.shade200;
+    paint.color = Colors.cyan.shade100;
     for (Point pt
         in currentPlane.gabarit.sublist(1, currentPlane.gabarit.length)) {
       arrowPath.lineTo(
@@ -86,27 +88,74 @@ class ChartPainter extends CustomPainter {
     }
 
     arrowPath.close();
+
+
     canvas.drawPath(arrowPath, paint);
 
-    paint.color = Colors.orange;
-    canvas.drawCircle(
-        Offset((totalNm.value - minNm) * Nm_PX,
-            defaultHeight - (totalkg.value - minkg) * kg_PX),
-        4,
-        paint);
-    paint.color = Colors.yellow;
+    Offset maxFuelOffset = Offset((totalNmfuelMax - minNm) * Nm_PX,
+        defaultHeight - (totalkgfuelMax - minkg) * kg_PX),
+        minFuelOffset =  Offset((totalNmfuelMin - minNm) * Nm_PX,
+            defaultHeight - (totalkgfuelMin - minkg) * kg_PX);
 
-    canvas.drawCircle(
-        Offset((totalNmfuelMax - minNm) * Nm_PX,
-            defaultHeight - (totalkgfuelMax - minkg) * kg_PX),
-        3,
+    paint.color = Colors.grey;
+    paint.strokeWidth = 1.0;
+
+    canvas.drawLine(
+        maxFuelOffset,
+        minFuelOffset,
         paint);
-    paint.color = Colors.red;
-    canvas.drawCircle(
-        Offset((totalNmfuelMin - minNm) * Nm_PX,
-            defaultHeight - (totalkgfuelMin - minkg) * kg_PX),
-        3,
+
+    paint.strokeWidth = 2.0;
+
+    Offset deltaOffset =  Offset((minFuelOffset.dy-maxFuelOffset.dy),(minFuelOffset.dx-maxFuelOffset.dx));
+    deltaOffset = deltaOffset.scale(10/deltaOffset.distance,10/deltaOffset.distance );
+    canvas.drawLine(
+        Offset(maxFuelOffset.dx+deltaOffset.dx,
+            maxFuelOffset.dy-deltaOffset.dy),
+        Offset(maxFuelOffset.dx-deltaOffset.dx,
+            maxFuelOffset.dy+deltaOffset.dy),
         paint);
+
+    canvas.drawLine(
+        Offset(minFuelOffset.dx+deltaOffset.dx,
+            minFuelOffset.dy-deltaOffset.dy),
+        Offset(minFuelOffset.dx-deltaOffset.dx,
+            minFuelOffset.dy+deltaOffset.dy),
+        paint);
+
+    Offset centragePoint = Offset((totalNm.value - minNm) * Nm_PX,
+        defaultHeight - (totalkg.value - minkg) * kg_PX);
+
+    TextPainter textPainterFull = TextPainter(
+      text:const TextSpan(text: "F",style: TextStyle(color: Color.fromRGBO(120, 120, 120, 1.0))) ,
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.left
+    );
+    textPainterFull.layout(
+      minWidth: 0,
+      maxWidth: size.width,
+    );
+    TextPainter textPainterEmpty = TextPainter(
+      text:const TextSpan(text: "E",style: TextStyle(color: Color.fromRGBO(120, 120, 120, 1.0))) ,
+      textDirection: TextDirection.rtl,
+      textAlign: TextAlign.right,
+
+    );
+    textPainterEmpty.layout(
+      minWidth: 0,
+      maxWidth: size.width,
+    );
+
+    textPainterFull.paint(canvas, maxFuelOffset+const Offset(0,-14));
+    textPainterEmpty.paint(canvas, minFuelOffset+const Offset(-8,0));
+
+    bool isInPolygon =PolygonCollision.isPointInPolygon(currentPlane.gabarit,
+        Point(this.totalNm.value, this.totalkg.value));
+    paint.color = isInPolygon?Colors.amber:Colors.red ;
+    paint.strokeWidth=isInPolygon?2.5:4;
+    canvas.drawLine(Offset(centragePoint.dx-5, centragePoint.dy-5),Offset(centragePoint.dx+5, centragePoint.dy+5),paint);
+    canvas.drawLine(Offset(centragePoint.dx+5, centragePoint.dy-5),Offset(centragePoint.dx-5, centragePoint.dy+5),paint);
+
     paint.color = Colors.black;
     canvas.drawLine(const Offset(0, 0), Offset(0, defaultHeight), paint);
     canvas.drawLine(
@@ -117,4 +166,8 @@ class ChartPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
+}
+
+double hypotenuse(double x, double y) {
+  return sqrt(x * x + y * y);
 }
