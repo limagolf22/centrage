@@ -4,16 +4,30 @@ import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
 
-String dir = "";
+String impDir = "";
+String expDir = "";
 
-Future<void> getDir() async {
-  var directory = await getExternalStorageDirectory();
-  dir = directory!.path;
-  print("__________________" + dir);
+Future<void> getImportDir() async {
+  var directory = await getApplicationDocumentsDirectory();
+  impDir = directory.path;
+  print("import dir : " + impDir);
+}
+
+Future<void> getExportDir() async {
+  if (Platform.isAndroid) {
+    var directory = await getExternalStorageDirectory();
+    expDir = directory!.path;
+    print("export dir : " + expDir);
+  } else {
+    var directory = await getDownloadsDirectory();
+    expDir = directory!.path;
+    print("export dir : " + expDir);
+  }
 }
 
 Future<void> saveXslx(Values val, String airplaneName) async {
-  String file = "$dir/" + airplaneName.toLowerCase() + "-feuille-centrage.xlsx";
+  String file =
+      "$impDir/" + airplaneName.toLowerCase() + "-feuille-centrage.xlsx";
   var bytes = File(file).readAsBytesSync();
   Excel excel = Excel.decodeBytes(bytes);
   /* 
@@ -47,7 +61,8 @@ Future<void> saveXslx(Values val, String airplaneName) async {
 
   var fileBytes = excel.save();
 
-  File(join("$dir/" + airplaneName.toLowerCase() + "-feuille-centrage_ed.xlsx"))
+  File(join(
+      "$impDir/" + airplaneName.toLowerCase() + "-feuille-centrage_ed.xlsx"))
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes!);
 

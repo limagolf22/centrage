@@ -91,7 +91,21 @@ List<Plane> planeList = [
       210,
       0,
       766.0,
-      0.9494)
+      0.9494),
+  Plane(
+      "F-GHEO",
+      [
+        Point(0.830, 858),
+        Point(0.830, 1021),
+        Point(1.039, 1406),
+        Point(1.194, 1406),
+        Point(1.194, 858),
+      ],
+      {"mainFuel": 1.219, "crew": 1.040, "pax": 1.880, "freight": 2.413},
+      333,
+      0,
+      858.0,
+      0.975)
 ];
 
 Plane currentPlane = planeList[0];

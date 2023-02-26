@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    getDir();
+    getImportDir();
+    getExportDir();
     return MaterialApp(
       title: 'Centrage AC ENAC',
       theme: ThemeData(
@@ -113,13 +114,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 min: 0.0,
                 max: currentPlane.maxFuel,
                 valNot: values.mainFuel,
-                label: "mainFuel ")
+                label: "main\nfuel ")
               ..unit = "L",
             Input(
                 min: 0.0,
                 max: currentPlane.maxAuxFuel,
                 valNot: values.auxFuel,
-                label: "auxFuel ")
+                label: "aux\nFuel ")
               ..unit = "L",
             Input(min: 0.0, max: 250.0, valNot: values.crew, label: "crew "),
             Input(min: 0.0, max: 250.0, valNot: values.pax, label: "pax "),
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 200,
                 child: Chart(totalkg: values.totalkg, totalNm: values.totalNm)),
             TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
-            Text(dir == "" ? "" : "saved in : " + dir,
+            Text(impDir == "" ? "" : "saved in : " + impDir,
                 style: TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
           ],
         ));
