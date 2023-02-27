@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:centrage/plane_importer.dart';
 import 'package:centrage/values.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
@@ -23,6 +24,11 @@ Future<void> getExportDir() async {
     expDir = directory!.path;
     print("export dir : " + expDir);
   }
+}
+
+Future<void> loadPlanesFile() async {
+  var _planeList = await loadPlanes("tr");
+  planeList = _planeList;
 }
 
 Future<void> saveXslx(Values val, String airplaneName) async {

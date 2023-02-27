@@ -1,28 +1,63 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
+import 'package:centrage/plane_importer.dart';
+import 'package:flutter/foundation.dart';
 
 const fuelType = {"100LL": 0.72, "JETA1": 0.8};
 
 class Plane {
   String name;
   List<Point> gabarit;
-  Map<String, double> leverArm;
-  double maxFuel, maxAuxFuel, massPlane, laPlane;
+  Map<String, num> leverArm;
+  num maxFuel, maxAuxFuel, massPlane, laPlane;
 
   Plane(this.name, this.gabarit, this.leverArm, this.maxFuel, this.maxAuxFuel,
       this.massPlane, this.laPlane);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is Plane &&
+        other.name == name &&
+        listEquals(other.gabarit, gabarit) &&
+        mapEquals(other.leverArm, leverArm) &&
+        other.maxFuel == maxFuel &&
+        other.maxAuxFuel == maxAuxFuel &&
+        other.massPlane == massPlane &&
+        other.laPlane == laPlane;
+  }
 }
 
 List<Plane> planeList = [
   Plane(
       "F-GOVL",
       [
-        Point(0.205, 566),
-        Point(0.205, 750),
-        Point(0.428, 900),
-        Point(0.564, 900),
-        Point(0.564, 566)
+        const Point(0.205, 566),
+        const Point(0.205, 750),
+        const Point(0.428, 900),
+        const Point(0.564, 900),
+        const Point(0.564, 566)
+      ],
+      {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.3},
+      110,
+      0,
+      566,
+      0.3595)
+];
+
+List<Plane> planeListTrue = [
+  Plane(
+      "F-GOVL",
+      [
+        const Point(0.205, 566),
+        const Point(0.205, 750),
+        const Point(0.428, 900),
+        const Point(0.564, 900),
+        const Point(0.564, 566)
       ],
       {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.3},
       110,
@@ -32,11 +67,11 @@ List<Plane> planeList = [
   Plane(
       "F-GLVY",
       [
-        Point(0.205, 566),
-        Point(0.205, 750),
-        Point(0.428, 900),
-        Point(0.564, 900),
-        Point(0.564, 566)
+        const Point(0.205, 566),
+        const Point(0.205, 750),
+        const Point(0.428, 900),
+        const Point(0.564, 900),
+        const Point(0.564, 566)
       ],
       {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.3},
       110,
@@ -46,11 +81,11 @@ List<Plane> planeList = [
   Plane(
       "F-GGXU",
       [
-        Point(0.205, 581.9),
-        Point(0.205, 750),
-        Point(0.428, 900),
-        Point(0.564, 900),
-        Point(0.564, 581.9)
+        const Point(0.205, 581.9),
+        const Point(0.205, 750),
+        const Point(0.428, 900),
+        const Point(0.564, 900),
+        const Point(0.564, 581.9)
       ],
       {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.9},
       110,
@@ -60,11 +95,11 @@ List<Plane> planeList = [
   Plane(
       "F-GYRL",
       [
-        Point(0.205, 600),
-        Point(0.205, 760),
-        Point(0.428, 1000),
-        Point(0.564, 1000),
-        Point(0.564, 600)
+        const Point(0.205, 600),
+        const Point(0.205, 760),
+        const Point(0.428, 1000),
+        const Point(0.564, 1000),
+        const Point(0.564, 600)
       ],
       {
         "mainFuel": 1.12,
@@ -80,12 +115,12 @@ List<Plane> planeList = [
   Plane(
       "F-GUAC",
       [
-        Point(0.949, 700),
-        Point(0.949, 970),
-        Point(1.01, 1070),
-        Point(1.083, 1150),
-        Point(1.205, 1150),
-        Point(1.205, 700)
+        const Point(0.949, 700),
+        const Point(0.949, 970),
+        const Point(1.01, 1070),
+        const Point(1.083, 1150),
+        const Point(1.205, 1150),
+        const Point(1.205, 700)
       ],
       {"mainFuel": 1.075, "crew": 1.165, "pax": 2.095, "freight": 2.6},
       210,
@@ -95,11 +130,11 @@ List<Plane> planeList = [
   Plane(
       "F-GHEO",
       [
-        Point(0.830, 858),
-        Point(0.830, 1021),
-        Point(1.039, 1406),
-        Point(1.194, 1406),
-        Point(1.194, 858),
+        const Point(0.830, 858),
+        const Point(0.830, 1021),
+        const Point(1.039, 1406),
+        const Point(1.194, 1406),
+        const Point(1.194, 858),
       ],
       {"mainFuel": 1.219, "crew": 1.040, "pax": 1.880, "freight": 2.413},
       333,

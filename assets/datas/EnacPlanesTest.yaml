@@ -1,0 +1,134 @@
+F-GOVL:
+  gabarit:
+    - x: 0.205
+      y: 566
+    - x: 0.205
+      y: 750
+    - x: 0.428
+      y: 900
+    - x: 0.564
+      y: 900
+    - x: 0.564
+      y: 566
+  leverArm:
+    mainFuel: 1.12
+    crew: 0.41
+    pax: 1.19
+    freight: 1.3
+  maxFuel: 110
+  maxAuxFuel: 0
+  massPlane: 566
+  laPlane: 0.3595
+
+F-GLVY:
+  gabarit:
+    - x: 0.205
+      y: 566
+    - x: 0.205
+      y: 750
+    - x: 0.428
+      y: 900
+    - x: 0.564
+      y: 900
+    - x: 0.564
+      y: 566
+  leverArm:
+    mainFuel: 1.12
+    crew: 0.41
+    pax: 1.19
+    freight: 1.3
+  maxFuel: 110
+  maxAuxFuel: 0
+  massPlane: 566
+  laPlane: 0.3595
+
+F-GGXU:
+  gabarit:
+    - x: 0.205
+      y: 581.9
+    - x: 0.205
+      y: 750
+    - x: 0.428
+      y: 900
+    - x: 0.564
+      y: 900
+    - x: 0.564
+      y: 581.9
+  leverArm:
+    mainFuel: 1.12
+    crew: 0.41
+    pax: 1.19
+    freight: 1.9
+  maxFuel: 110
+  maxAuxFuel: 0
+  massPlane: 581.9
+  laPlane: 0.3290
+
+F-GYRL:
+  gabarit:
+    - x: 0.205
+      y: 600
+    - x: 0.205
+      y: 760
+    - x: 0.428
+      y: 1000
+    - x: 0.564
+      y: 1000
+    - x: 0.564
+      y: 600
+  leverArm:
+    mainFuel: 1.12
+    auxFuel: 1.61
+    crew: 0.41
+    pax: 1.19
+    freight: 1.9
+  maxFuel: 110
+  maxAuxFuel: 50
+  massPlane: 603.0
+  laPlane: 0.3159
+
+F-GUAC:
+  gabarit:
+    - x: 0.949
+      y: 700
+    - x: 0.949
+      y: 970
+    - x: 1.01
+      y: 1070
+    - x: 1.083
+      y: 1150
+    - x: 1.205
+      y: 1150
+    - x: 1.205
+      y: 700
+  leverArm:
+    mainFuel: 1.075
+    crew: 1.165
+    pax: 2.095
+    freight: 2.6
+  maxFuel: 210
+  maxAuxFuel: 0
+  massPlane: 766.0
+  laPlane: 0.9494
+
+F-GHEO:
+  gabarit:
+    - x: 0.830
+      y: 858
+    - x: 0.830
+      y: 1021
+    - x: 1.039
+      y: 1406
+    - x: 1.194
+      y: 1406
+    - x: 1.194
+      y: 858
+  leverArm:
+    mainFuel: 1.219
+    crew: 1.040
+    pax: 1.880
+    freight: 2.413
+  maxFuel: 333
+  maxAuxFuel: 0
+  massPlane: 858.0
+  laPlane: 0.975

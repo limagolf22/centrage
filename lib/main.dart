@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    loadPlanesFile();
     getImportDir();
     getExportDir();
     return MaterialApp(
@@ -112,15 +113,15 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Input(
                 min: 0.0,
-                max: currentPlane.maxFuel,
+                max: currentPlane.maxFuel.toDouble(),
                 valNot: values.mainFuel,
                 label: "main\nfuel ")
               ..unit = "L",
             Input(
                 min: 0.0,
-                max: currentPlane.maxAuxFuel,
+                max: currentPlane.maxAuxFuel.toDouble(),
                 valNot: values.auxFuel,
-                label: "aux\nFuel ")
+                label: "aux\nfuel ")
               ..unit = "L",
             Input(min: 0.0, max: 250.0, valNot: values.crew, label: "crew "),
             Input(min: 0.0, max: 250.0, valNot: values.pax, label: "pax "),
