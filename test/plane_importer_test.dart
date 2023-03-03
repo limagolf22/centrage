@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:centrage/plane_importer.dart';
+import 'package:centrage/plane_datas.dart';
 import 'package:centrage/values.dart';
 import 'package:test/test.dart';
 
@@ -13,8 +13,9 @@ void main() {
     });
   });
   group('YAML import', () {
-    test('file should be imported', () {
-      final res = loadPlanes("./assets/datas/EnacPlanesTest.yaml");
+    test('file should be imported', () async {
+      final res =
+          await loadPlanesFromBundle("./assets/datas/EnacPlanesTest.yaml");
       List<Plane> expectedplaneList = [
         Plane(
             "F-GOVL",

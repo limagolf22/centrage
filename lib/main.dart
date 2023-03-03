@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:centrage/chart.dart';
 import 'package:centrage/input.dart';
+import 'package:centrage/plane_datas.dart';
 import 'package:centrage/save.dart';
 import 'package:centrage/total.dart';
 import 'package:centrage/values.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 enum SaveState { SAVED, NOTSAVED }
 
@@ -19,7 +24,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    loadPlanesFile();
     getImportDir();
     getExportDir();
     return MaterialApp(
@@ -57,8 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    getImportDir().then((value) {
+      loadPlanesFile().then((v) => setState((() {})));
+    });
+
     values.totalkg.addListener(() {
-      print(saveS);
       if (saveS == SaveState.SAVED) {
         saveS = SaveState.NOTSAVED;
         setState(() {});
@@ -81,6 +88,22 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           actions: <Widget>[
             IconButton(
+                color: Color.fromARGB(255, 255, 255, 255),
+                icon: const Icon(Icons.download_rounded),
+                onPressed: (() async {
+                  FilePickerResult? result =
+                      await (FilePicker.platform.pickFiles(
+                    type: FileType.any,
+                  ));
+                  if (result != null) {
+                    File file = File(result.files.first.path!);
+                    String content = await file.readAsString();
+                    loadPlanesFromString(content);
+                    savePlanes(basename(file.path), content);
+                    setState(() {});
+                  }
+                })),
+            IconButton(
               color: saveS == SaveState.SAVED
                   ? Color.fromARGB(255, 255, 255, 255)
                   : Color.fromARGB(255, 255, 0, 0),
@@ -88,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               tooltip: 'Save the configuration',
               onPressed: () {
                 saveS = SaveState.SAVED;
-                saveXslx(values, currentPlane.name);
+                saveXlsx(values, currentPlane.name);
                 setState(() {});
               },
             ),

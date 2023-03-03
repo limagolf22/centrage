@@ -1,13 +1,18 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:centrage/save.dart';
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
 import 'package:centrage/values.dart';
 
-Future<List<Plane>> loadPlanes(String path) async {
-  String yamlString =
-      await rootBundle.loadString('assets/datas/EnacPlanesTest.yaml');
+Future<List<Plane>> loadPlanesFromBundle(String path) async {
+  String yamlString = await rootBundle.loadString(path);
+  return loadPlanes(yamlString);
+}
+
+List<Plane> loadPlanes(String yamlString) {
   final YamlMap yamlMap = loadYaml(yamlString);
   List<Plane> planeList = [];
   yamlMap.forEach((key, value) {
@@ -23,4 +28,10 @@ Future<List<Plane>> loadPlanes(String path) async {
         value['maxAuxFuel'], value['massPlane'], value['laPlane']));
   });
   return planeList;
+}
+
+Future<void> savePlanes(String name, String yamlString) async {
+  File("$impDir/datas/" + name)
+    ..createSync(recursive: true)
+    ..writeAsStringSync(yamlString);
 }

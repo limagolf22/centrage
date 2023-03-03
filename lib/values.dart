@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:centrage/plane_importer.dart';
+import 'package:centrage/plane_datas.dart';
 import 'package:flutter/foundation.dart';
 
 const fuelType = {"100LL": 0.72, "JETA1": 0.8};
