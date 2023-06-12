@@ -18,7 +18,6 @@ Future<void> getImportDir() async {
     var directory = await getApplicationDocumentsDirectory();
     impDir = directory.path;
     print("import dir : " + impDir);
-    print("import content " + directory.listSync(recursive: true).toString());
   }
 }
 
@@ -58,8 +57,7 @@ void loadPlanesFromString(String yamlString) {
 Future<void> savePlanesFile() async {}
 
 Future<void> saveXlsx(Values val, String airplaneName) async {
-  String file =
-      "$impDir/" + airplaneName.toLowerCase() + "-feuille-centrage.xlsx";
+  String file = "$impDir/feuille-centrage-template.xlsx";
   var bytes = File(file).readAsBytesSync();
   Excel excel = Excel.decodeBytes(bytes);
   /* 
@@ -77,19 +75,63 @@ Future<void> saveXlsx(Values val, String airplaneName) async {
 
   cellStyle.underline = Underline.Single; // or Underline.Double
 
-  var fuel = sheetObject.cell(CellIndex.indexByString("E10"));
-  fuel.value = val.mainFuel.value; // dynamic values support provided;
+  var nameAvion = sheetObject.cell(CellIndex.indexByString("A3"));
+  nameAvion.value = currentPlane.name;
 
-  var crew = sheetObject.cell(CellIndex.indexByString("C18"));
+  var fuel = sheetObject.cell(CellIndex.indexByString("E9"));
+  fuel.value = val.mainFuel.value;
+
+  var auxFuel = sheetObject.cell(CellIndex.indexByString("E13"));
+  auxFuel.value = val.auxFuel.value;
+
+  var mAvion = sheetObject.cell(CellIndex.indexByString("C21"));
+  mAvion.value = currentPlane.massPlane;
+  var lAvion = sheetObject.cell(CellIndex.indexByString("D21"));
+  lAvion.value = currentPlane.laPlane;
+
+  var crew = sheetObject.cell(CellIndex.indexByString("C22"));
   crew.value = val.crew.value;
+  var lCrew = sheetObject.cell(CellIndex.indexByString("D22"));
+  lCrew.value = currentPlane.leverArm["crew"];
 
-  var pax = sheetObject.cell(CellIndex.indexByString("C19"));
+  var pax = sheetObject.cell(CellIndex.indexByString("C23"));
   pax.value = val.pax.value;
+  var lPax = sheetObject.cell(CellIndex.indexByString("D23"));
+  lPax.value = currentPlane.leverArm["pax"];
 
-  var freight = sheetObject.cell(CellIndex.indexByString("C21"));
+  fuel = sheetObject.cell(CellIndex.indexByString("C24"));
+  fuel.value = val.mainFuel.value * fuelDensities[currentPlane.fuelType.name]!;
+  var lFuel = sheetObject.cell(CellIndex.indexByString("D24"));
+  lFuel.value = currentPlane.leverArm["mainFuel"];
+
+  auxFuel = sheetObject.cell(CellIndex.indexByString("C25"));
+  auxFuel.value = val.auxFuel.value;
+  var lAuxFuel = sheetObject.cell(CellIndex.indexByString("D25"));
+  lAuxFuel.value = currentPlane.leverArm.containsKey("auxFuel")
+      ? currentPlane.leverArm["auxFuel"]
+      : 0;
+
+  var freight = sheetObject.cell(CellIndex.indexByString("C26"));
   freight.value = val.freight.value;
+  var lFreight = sheetObject.cell(CellIndex.indexByString("D26"));
+  lFreight.value = currentPlane.leverArm["freight"];
 
-  //fuel.cellStyle = cellStyle;
+  var mTot = sheetObject.cell(CellIndex.indexByString("C28"));
+  mTot.value = val.totalkg.value;
+  var lTot = sheetObject.cell(CellIndex.indexByString("D28"));
+  lTot.value = val.totalNm.value;
+
+  for (var i = 0; i < currentPlane.gabarit.length; i++) {
+    var gab =
+        sheetObject.cell(CellIndex.indexByString("B" + (49 + i).toString()));
+    gab.value = String.fromCharCode(65 + i);
+    var gabX =
+        sheetObject.cell(CellIndex.indexByString("C" + (49 + i).toString()));
+    gabX.value = currentPlane.gabarit[i].x;
+    var gabY =
+        sheetObject.cell(CellIndex.indexByString("D" + (49 + i).toString()));
+    gabY.value = currentPlane.gabarit[i].y;
+  }
 
   var fileBytes = excel.save();
 
@@ -97,7 +139,4 @@ Future<void> saveXlsx(Values val, String airplaneName) async {
       "$impDir/" + airplaneName.toLowerCase() + "-feuille-centrage_ed.xlsx"))
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes!);
-
-  // printing cell-type
-  //print("CellType: " + fuel.cellType.toString());
 }

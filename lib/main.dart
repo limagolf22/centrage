@@ -24,8 +24,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    getImportDir();
-    getExportDir();
     return MaterialApp(
       title: 'Centrage AC ENAC',
       theme: ThemeData(
@@ -61,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    getExportDir();
     getImportDir().then((value) {
       loadPlanesFile().then((v) => setState((() {})));
     });

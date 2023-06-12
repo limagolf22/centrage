@@ -2,16 +2,20 @@ import 'dart:math';
 import 'package:centrage/plane_datas.dart';
 import 'package:flutter/foundation.dart';
 
-const fuelType = {"100LL": 0.72, "JETA1": 0.8};
+const fuelDensities = {"AVGAS": 0.72, "JETA1": 0.8};
+
+enum FuelType { AVGAS, JETA1 }
 
 class Plane {
   String name;
   List<Point> gabarit;
   Map<String, num> leverArm;
   num maxFuel, maxAuxFuel, massPlane, laPlane;
+  FuelType fuelType;
 
   Plane(this.name, this.gabarit, this.leverArm, this.maxFuel, this.maxAuxFuel,
-      this.massPlane, this.laPlane);
+      this.massPlane, this.laPlane,
+      {this.fuelType = FuelType.AVGAS});
 
   @override
   bool operator ==(Object other) {
@@ -145,7 +149,7 @@ List<Plane> planeListTrue = [
 
 Plane currentPlane = planeList[0];
 
-double fuelDensity = fuelType["100LL"]!;
+double fuelDensity = fuelDensities[currentPlane.fuelType.name]!;
 
 Map<String, Map<String, double>> storedValues = {
   for (var item in planeList)
