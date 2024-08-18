@@ -33,6 +33,19 @@ class Plane {
         other.massPlane == massPlane &&
         other.laPlane == laPlane;
   }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      Object.hashAll(gabarit),
+      Object.hashAll(leverArm.entries),
+      maxFuel,
+      maxAuxFuel,
+      massPlane,
+      laPlane,
+    );
+  }
 }
 
 List<Plane> planeListTrue = [

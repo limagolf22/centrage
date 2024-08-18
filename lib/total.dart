@@ -32,7 +32,7 @@ class _TotalLabelState extends State<TotalLabel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: Text(
           "masse totale : " +
               ((widget.valtotkg.value * 10).round() / 10).toString() +

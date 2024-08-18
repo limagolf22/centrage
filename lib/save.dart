@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:centrage/plane_datas.dart';
 import 'package:centrage/values.dart';
+import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,16 +9,19 @@ import 'package:path_provider/path_provider.dart';
 String impDir = "";
 String expDir = "";
 
+final loggerSave = Logger("Save");
+
 Future<void> getImportDir() async {
   if (Platform.isAndroid) {
     var directory = await getExternalStorageDirectory();
     impDir = directory!.path;
-    print("import dir : " + impDir);
-    print("import content " + directory.listSync(recursive: true).toString());
+    loggerSave.fine("import dir : " + impDir);
+    loggerSave.fine(
+        "import content " + directory.listSync(recursive: true).toString());
   } else {
     var directory = await getApplicationDocumentsDirectory();
     impDir = directory.path;
-    print("import dir : " + impDir);
+    loggerSave.fine("import dir : " + impDir);
   }
 }
 
@@ -25,24 +29,24 @@ Future<void> getExportDir() async {
   if (Platform.isAndroid) {
     var directory = await getExternalStorageDirectory();
     expDir = directory!.path;
-    print("export dir : " + expDir);
-    print("export content " + directory.listSync().toString());
+    loggerSave.fine("export dir : " + expDir);
+    loggerSave.fine("export content " + directory.listSync().toString());
   } else {
     var directory = await getDownloadsDirectory();
     expDir = directory!.path;
-    print("export dir : " + expDir);
+    loggerSave.fine("export dir : " + expDir);
   }
 }
 
 Future<void> loadPlanesFile() async {
   if (impDir != "" && File(impDir + "/datas/EnacPlanes.yaml").existsSync()) {
-    print("init load done from datas");
+    loggerSave.fine("init load done from datas");
     File file = File(impDir + "/datas/EnacPlanes.yaml");
     String content = await file.readAsString();
     loadPlanesFromString(content);
   } else {
     var _planeList = await loadPlanesFromBundle('assets/datas/EnacPlanes.yaml');
-    print("init load done from bundle");
+    loggerSave.fine("init load done from bundle");
     planeList = _planeList;
   }
 }
