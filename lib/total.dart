@@ -38,7 +38,7 @@ class _TotalLabelState extends State<TotalLabel> {
               ((widget.valtotkg.value * 10).round() / 10).toString() +
               " kg, bras de levier : " +
               ((widget.valtotNm.value * 1000).round() / 1000).toString() +
-              " kg.m",
+              " m",
           style: TextStyle(
               color: inlimitsConvex() ? Colors.black : Colors.red,
               fontWeight:

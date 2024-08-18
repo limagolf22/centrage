@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:centrage/chart.dart';
 import 'package:centrage/input.dart';
 import 'package:centrage/plane_datas.dart';
@@ -8,7 +6,6 @@ import 'package:centrage/total.dart';
 import 'package:centrage/values.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 enum SaveState { SAVED, NOTSAVED }
 
@@ -38,7 +35,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.cyan,
       ),
-      home: MyHomePage(title: "Centrage AC ENAC"),
+      home: const MyHomePage(title: "Centrage AC ENAC"),
     );
   }
 }
@@ -53,7 +50,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   Values values = Values();
 
   @override
@@ -87,25 +83,23 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           actions: <Widget>[
             IconButton(
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 icon: const Icon(Icons.download_rounded),
                 onPressed: (() async {
-                  FilePickerResult? result =
-                      await (FilePicker.platform.pickFiles(
-                    type: FileType.any,
-                  ));
-                  if (result != null) {
-                    File file = File(result.files.first.path!);
-                    String content = await file.readAsString();
-                    loadPlanesFromString(content);
-                    savePlanes(basename(file.path), content);
+                  FilePickerResult? result = await (FilePicker.platform
+                      .pickFiles(type: FileType.any, allowMultiple: false));
+                  if (result != null && result.files.isNotEmpty) {
+                    final fileBytes = result.files.first.bytes;
+                    final fileName = result.files.first.name;
+                    loadPlanesFromString(String.fromCharCodes(fileBytes!));
+                    savePlanes(fileName, String.fromCharCodes(fileBytes));
                     setState(() {});
                   }
                 })),
             IconButton(
               color: saveS == SaveState.SAVED
-                  ? Color.fromARGB(255, 255, 255, 255)
-                  : Color.fromARGB(255, 255, 0, 0),
+                  ? const Color.fromARGB(255, 255, 255, 255)
+                  : const Color.fromARGB(255, 255, 0, 0),
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
@@ -118,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         drawer: Drawer(
             child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 50.0),
+                padding: const EdgeInsets.symmetric(vertical: 50.0),
                 children: [
               for (Plane plane in planeList)
                 ListTile(
@@ -137,22 +131,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 min: 0.0,
                 max: currentPlane.maxFuel.toDouble(),
                 valNot: values.mainFuel,
-                label: "main\nfuel ")
-              ..unit = "L",
+                label: "main\nfuel ",
+                unit: "L"),
             Input(
                 min: 0.0,
                 max: currentPlane.maxAuxFuel.toDouble(),
                 valNot: values.auxFuel,
-                label: "aux\nfuel ")
-              ..unit = "L",
-            Input(min: 0.0, max: 250.0, valNot: values.crew, label: "crew "),
-            Input(min: 0.0, max: 250.0, valNot: values.pax, label: "pax "),
+                label: "aux\nfuel ",
+                unit: "L"),
             Input(
-                min: 0.0, max: 65.0, valNot: values.freight, label: "freight "),
+                min: 0.0,
+                max: 250.0,
+                valNot: values.crew,
+                label: "crew ",
+                unit: "kg"),
+            Input(
+                min: 0.0,
+                max: 250.0,
+                valNot: values.pax,
+                label: "pax ",
+                unit: "kg"),
+            Input(
+                min: 0.0,
+                max: 65.0,
+                valNot: values.freight,
+                label: "freight ",
+                unit: "kg"),
             Text(
               currentPlane.name,
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             SizedBox(
@@ -160,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Chart(totalkg: values.totalkg, totalNm: values.totalNm)),
             TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
             Text(impDir == "" ? "" : "saved in : " + impDir,
-                style: TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
+                style: const TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
           ],
         ));
   }

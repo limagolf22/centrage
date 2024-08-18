@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:centrage/plane_datas.dart';
@@ -5,17 +6,10 @@ import 'package:centrage/values.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('trash test', () {
-    test('Point equals', () {
-      Point a = const Point(2, 2);
-      Point b = const Point(2, 2);
-      expect(a, b);
-    });
-  });
   group('YAML import', () {
     test('file should be imported', () async {
-      final res =
-          await loadPlanesFromBundle("./assets/datas/EnacPlanesTest.yaml");
+      File file = File("test/assets/EnacPlanesTest.yaml");
+      final res = loadPlanes(file.readAsStringSync());
       List<Plane> expectedplaneList = [
         Plane(
             "F-GOVL",

@@ -35,15 +35,13 @@ Future<void> getExportDir() async {
 }
 
 Future<void> loadPlanesFile() async {
-  if (impDir != "" &&
-      File(impDir + "/datas/EnacPlanesTest.yaml").existsSync()) {
+  if (impDir != "" && File(impDir + "/datas/EnacPlanes.yaml").existsSync()) {
     print("init load done from datas");
-    File file = File(impDir + "/datas/EnacPlanesTest.yaml");
+    File file = File(impDir + "/datas/EnacPlanes.yaml");
     String content = await file.readAsString();
     loadPlanesFromString(content);
   } else {
-    var _planeList =
-        await loadPlanesFromBundle('assets/datas/EnacPlanesTest.yaml');
+    var _planeList = await loadPlanesFromBundle('assets/datas/EnacPlanes.yaml');
     print("init load done from bundle");
     planeList = _planeList;
   }

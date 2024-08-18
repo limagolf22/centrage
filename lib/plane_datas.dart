@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:centrage/save.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +15,6 @@ List<Plane> loadPlanes(String yamlString) {
   final YamlMap yamlMap = loadYaml(yamlString);
   List<Plane> planeList = [];
   yamlMap.forEach((key, value) {
-    var name = key;
     List<Point> gabarit = [
       for (dynamic pt in value['gabarit']) Point((pt['x']!), pt['y']!)
     ];

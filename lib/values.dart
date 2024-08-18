@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:centrage/plane_datas.dart';
 import 'package:flutter/foundation.dart';
 
 const fuelDensities = {"AVGAS": 0.72, "JETA1": 0.8};
@@ -36,7 +35,7 @@ class Plane {
   }
 }
 
-List<Plane> planeList = [
+List<Plane> planeListTrue = [
   Plane(
       "F-GOVL",
       [
@@ -53,7 +52,7 @@ List<Plane> planeList = [
       0.3595)
 ];
 
-List<Plane> planeListTrue = [
+List<Plane> planeList = [
   Plane(
       "F-GOVL",
       [
@@ -162,15 +161,15 @@ double totalkgfuelMin = 0.0;
 double totalNmfuelMin = 0.0;
 
 class Values {
-  ValueNotifier<double> mainFuel = new ValueNotifier(110.0);
-  ValueNotifier<double> auxFuel = new ValueNotifier(0.0);
+  ValueNotifier<double> mainFuel = ValueNotifier(110.0);
+  ValueNotifier<double> auxFuel = ValueNotifier(0.0);
 
-  ValueNotifier<double> crew = new ValueNotifier(130.0);
-  ValueNotifier<double> pax = new ValueNotifier(7.5);
-  ValueNotifier<double> freight = new ValueNotifier(0.0);
+  ValueNotifier<double> crew = ValueNotifier(130.0);
+  ValueNotifier<double> pax = ValueNotifier(7.5);
+  ValueNotifier<double> freight = ValueNotifier(0.0);
 
-  ValueNotifier<double> totalkg = new ValueNotifier(0.0);
-  ValueNotifier<double> totalNm = new ValueNotifier(0.0);
+  ValueNotifier<double> totalkg = ValueNotifier(0.0);
+  ValueNotifier<double> totalNm = ValueNotifier(0.0);
 
   Values() {
     mainFuel.addListener(updateTot);
@@ -196,13 +195,13 @@ class Values {
   }
 
   void updateTot() {
-    double t_kg = currentPlane.massPlane +
+    double tKg = currentPlane.massPlane +
         mainFuel.value * fuelDensity +
         auxFuel.value * fuelDensity +
         crew.value +
         pax.value +
         freight.value;
-    double t_Nm = ((currentPlane.massPlane * currentPlane.laPlane +
+    double tNm = ((currentPlane.massPlane * currentPlane.laPlane +
                     mainFuel.value *
                         fuelDensity *
                         currentPlane.leverArm["mainFuel"]! +
@@ -214,10 +213,10 @@ class Values {
                     crew.value * currentPlane.leverArm["crew"]! +
                     pax.value * currentPlane.leverArm["pax"]! +
                     freight.value * currentPlane.leverArm["freight"]!) /
-                t_kg *
-                1000)
+                tKg *
+                10000)
             .round() /
-        1000;
+        10000;
     totalkgfuelMax = currentPlane.massPlane +
         currentPlane.maxFuel * fuelDensity +
         currentPlane.maxAuxFuel * fuelDensity +
@@ -239,18 +238,18 @@ class Values {
                     pax.value * currentPlane.leverArm["pax"]! +
                     freight.value * currentPlane.leverArm["freight"]!) /
                 totalkgfuelMax *
-                1000)
+                10000)
             .round() /
-        1000;
+        10000;
     totalNmfuelMin = ((currentPlane.massPlane * currentPlane.laPlane +
                     crew.value * currentPlane.leverArm["crew"]! +
                     pax.value * currentPlane.leverArm["pax"]! +
                     freight.value * currentPlane.leverArm["freight"]!) /
                 totalkgfuelMin *
-                1000)
+                10000)
             .round() /
-        1000;
-    totalkg.value = t_kg;
-    totalNm.value = t_Nm;
+        10000;
+    totalkg.value = tKg;
+    totalNm.value = tNm;
   }
 }

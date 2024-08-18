@@ -5,15 +5,16 @@ class Input extends StatefulWidget {
   final ValueNotifier<double> valNot;
   final double min, max;
   final String label;
-  String unit = "kg";
+  final String unit;
 
-  Input({
-    Key? key,
-    required this.valNot,
-    required this.min,
-    required this.max,
-    required this.label,
-  }) : super(key: key);
+  const Input(
+      {Key? key,
+      required this.valNot,
+      required this.min,
+      required this.max,
+      required this.label,
+      required this.unit})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -35,15 +36,14 @@ class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
     return (widget.min != widget.max)
-        ? Container(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                Container(
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+                SizedBox(
                     width: 45,
                     child: Text(widget.label, textAlign: TextAlign.left)),
-                Container(
+                SizedBox(
                     width: (MediaQuery.of(context).size.width) - 140,
                     child: Slider(
                         value: min(widget.max, max(widget.min, _val)),
@@ -51,7 +51,7 @@ class _InputState extends State<Input> {
                         min: widget.min,
                         max: widget.max,
                         divisions: (widget.max - widget.min).floor() * 2)),
-                Container(
+                SizedBox(
                     width: 93,
                     child: Text(
                         _val.toString() +
@@ -67,7 +67,7 @@ class _InputState extends State<Input> {
                                         "%)")
                                 : ""),
                         textAlign: TextAlign.left))
-              ]))
+              ])
         : Container();
   }
 
