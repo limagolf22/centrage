@@ -48,23 +48,6 @@ class Plane {
   }
 }
 
-List<Plane> planeListTrue = [
-  Plane(
-      "F-GOVL",
-      [
-        const Point(0.205, 566),
-        const Point(0.205, 750),
-        const Point(0.428, 900),
-        const Point(0.564, 900),
-        const Point(0.564, 566)
-      ],
-      {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.3},
-      110,
-      0,
-      566,
-      0.3595)
-];
-
 List<Plane> planeList = [
   Plane(
       "F-GOVL",
@@ -98,9 +81,9 @@ List<Plane> planeList = [
       "F-GGXU",
       [
         const Point(0.205, 581.9),
-        const Point(0.205, 750),
-        const Point(0.428, 900),
-        const Point(0.564, 900),
+        const Point(0.205, 750.0),
+        const Point(0.428, 900.0),
+        const Point(0.564, 900.0),
         const Point(0.564, 581.9)
       ],
       {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.9},

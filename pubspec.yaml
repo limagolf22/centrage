@@ -38,7 +38,7 @@ dependencies:
   poly_collisions: ^1.4.0
   flutter_launcher_icons:  ^0.10.0
   yaml: ^3.1.1
-  file_picker: ^5.2.5
+  file_picker: ^7.0.2
   logging: ^1.2.0
 
 flutter_icons:
@@ -81,7 +81,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/datas/EnacPlanes.yaml
-    - assets/icon/icon.png
+    - assets/datas/feuille-centrage-template.xlsx
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

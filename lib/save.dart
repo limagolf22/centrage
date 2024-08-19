@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:centrage/plane_datas.dart';
 import 'package:centrage/values.dart';
+import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
@@ -38,16 +40,20 @@ Future<void> getExportDir() async {
   }
 }
 
-Future<void> loadPlanesFile() async {
+/// Loads Planes Files. Returns [true] if they are loaded from an
+/// imported file, and [false] if datas come from internal storage.
+Future<bool> loadPlanesFile() async {
   if (impDir != "" && File(impDir + "/datas/EnacPlanes.yaml").existsSync()) {
     loggerSave.fine("init load done from datas");
     File file = File(impDir + "/datas/EnacPlanes.yaml");
     String content = await file.readAsString();
     loadPlanesFromString(content);
+    return true;
   } else {
     var _planeList = await loadPlanesFromBundle('assets/datas/EnacPlanes.yaml');
     loggerSave.fine("init load done from bundle");
     planeList = _planeList;
+    return false;
   }
 }
 
@@ -59,9 +65,14 @@ void loadPlanesFromString(String yamlString) {
 Future<void> savePlanesFile() async {}
 
 Future<void> saveXlsx(Values val, String airplaneName) async {
-  String file = "$impDir/feuille-centrage-template.xlsx";
-  var bytes = File(file).readAsBytesSync();
-  Excel excel = Excel.decodeBytes(bytes);
+  var templateStr =
+      await rootBundle.load('assets/datas/feuille-centrage-template.xlsx');
+  saveXlsxWithInt8List(val, airplaneName, templateStr.buffer.asUint8List());
+}
+
+Future<void> saveXlsxWithInt8List(
+    Values val, String airplaneName, Uint8List values) async {
+  Excel excel = Excel.decodeBytes(values);
   /* 
       * sheetObject.updateCell(cell, value, { CellStyle (Optional)});
       * sheetObject created by calling - // Sheet sheetObject = excel['SheetName'];
@@ -77,11 +88,23 @@ Future<void> saveXlsx(Values val, String airplaneName) async {
 
   cellStyle.underline = Underline.Single; // or Underline.Double
 
+  var date = sheetObject.cell(CellIndex.indexByString("A1"));
+  date.value = DateTime.now().toUtc().toIso8601String().substring(0, 16);
+
   var nameAvion = sheetObject.cell(CellIndex.indexByString("A3"));
   nameAvion.value = currentPlane.name;
 
+  var fuelType = sheetObject.cell(CellIndex.indexByString("E8"));
+  fuelType.value = currentPlane.fuelType.name;
+
+  var labelFuel = sheetObject.cell(CellIndex.indexByString("B9"));
+  labelFuel.value = "Volume en litres  (max : ${currentPlane.maxFuel}) :";
+
   var fuel = sheetObject.cell(CellIndex.indexByString("E9"));
   fuel.value = val.mainFuel.value;
+
+  var labelAuxFuel = sheetObject.cell(CellIndex.indexByString("B13"));
+  labelAuxFuel.value = "Volume en litres  (max : ${currentPlane.maxAuxFuel}) :";
 
   var auxFuel = sheetObject.cell(CellIndex.indexByString("E13"));
   auxFuel.value = val.auxFuel.value;
@@ -101,13 +124,16 @@ Future<void> saveXlsx(Values val, String airplaneName) async {
   var lPax = sheetObject.cell(CellIndex.indexByString("D23"));
   lPax.value = currentPlane.leverArm["pax"];
 
-  fuel = sheetObject.cell(CellIndex.indexByString("C24"));
-  fuel.value = val.mainFuel.value * fuelDensities[currentPlane.fuelType.name]!;
+  fuel = sheetObject.cell(CellIndex.indexByString("E10"));
+  fuel.value =
+      (val.mainFuel.value - 1) * fuelDensities[currentPlane.fuelType.name]!;
   var lFuel = sheetObject.cell(CellIndex.indexByString("D24"));
   lFuel.value = currentPlane.leverArm["mainFuel"];
 
-  auxFuel = sheetObject.cell(CellIndex.indexByString("C25"));
-  auxFuel.value = val.auxFuel.value;
+  auxFuel = sheetObject.cell(CellIndex.indexByString("E14"));
+  auxFuel.value =
+      (val.auxFuel.value) * fuelDensities[currentPlane.fuelType.name]!;
+
   var lAuxFuel = sheetObject.cell(CellIndex.indexByString("D25"));
   lAuxFuel.value = currentPlane.leverArm.containsKey("auxFuel")
       ? currentPlane.leverArm["auxFuel"]
@@ -138,7 +164,7 @@ Future<void> saveXlsx(Values val, String airplaneName) async {
   var fileBytes = excel.save();
 
   File(join(
-      "$impDir/" + airplaneName.toLowerCase() + "-feuille-centrage_ed.xlsx"))
+      "$expDir/" + airplaneName.toLowerCase() + "-feuille-centrage_ed.xlsx"))
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes!);
 }

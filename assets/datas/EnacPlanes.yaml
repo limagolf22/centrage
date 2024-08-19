@@ -1,4 +1,4 @@
-# version 10/06/2023
+# version 19/06/2024
 
 F-GOVL:
   gabarit:
@@ -43,6 +43,28 @@ F-GLVY:
   maxAuxFuel: 0
   massPlane: 566
   laPlane: 0.3595
+
+F-GGXU:
+  gabarit:
+    - x: 0.205
+      y: 581.9
+    - x: 0.205
+      y: 750.0
+    - x: 0.428
+      y: 900.0
+    - x: 0.564
+      y: 900.0
+    - x: 0.564
+      y: 581.9
+  leverArm:
+    mainFuel: 1.12
+    crew: 0.41
+    pax: 1.19
+    freight: 1.9
+  maxFuel: 110
+  maxAuxFuel: 0
+  massPlane: 581.9
+  laPlane: 0.3290
 
 F-GYRL:
   gabarit:
@@ -134,3 +156,25 @@ F-GHEO:
   maxAuxFuel: 0
   massPlane: 858.0
   laPlane: 0.975
+
+F-GOSN:
+  gabarit:
+    - x: 0.787
+      y: 544.5
+    - x: 0.787
+      y: 612
+    - x: 0.827
+      y: 758
+    - x: 0.927
+      y: 758
+    - x: 0.927
+      y: 544.5
+  leverArm:
+    mainFuel: 1.074
+    crew: 0.942
+    pax: 0.0
+    freight: 1.636
+  maxFuel: 130
+  maxAuxFuel: 0
+  massPlane: 544.5
+  laPlane: 0.778

@@ -149,6 +149,7 @@ class ChartPainter extends CustomPainter {
 
     bool isInPolygon = PolygonCollision.isPointInPolygon(
         currentPlane.gabarit, Point(totalNm.value, totalkg.value));
+
     paint.color = isInPolygon ? Colors.amber : Colors.red;
     paint.strokeWidth = isInPolygon ? 2.5 : 4;
     canvas.drawLine(Offset(centragePoint.dx - 5, centragePoint.dy - 5),
@@ -166,8 +167,4 @@ class ChartPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
-}
-
-double hypotenuse(double x, double y) {
-  return sqrt(x * x + y * y);
 }

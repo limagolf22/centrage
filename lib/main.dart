@@ -5,13 +5,21 @@ import 'package:centrage/save.dart';
 import 'package:centrage/total.dart';
 import 'package:centrage/values.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 enum SaveState { SAVED, NOTSAVED }
 
 SaveState saveS = SaveState.SAVED;
 
 void main() {
+  Logger.root.level = Level.FINE; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    if (kDebugMode) {
+      print('${record.level.name}: ${record.time}: ${record.message}');
+    }
+  });
   runApp(const MyApp());
 }
 
@@ -51,13 +59,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Values values = Values();
+  bool isDataLoadNecessary = false;
 
   @override
   void initState() {
     super.initState();
     getExportDir();
     getImportDir().then((value) {
-      loadPlanesFile().then((v) => setState((() {})));
+      loadPlanesFile().then((success) => setState((() {
+            isDataLoadNecessary = !success;
+          })));
     });
 
     values.totalkg.addListener(() {
@@ -84,7 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: <Widget>[
             IconButton(
                 color: const Color.fromARGB(255, 255, 255, 255),
-                icon: const Icon(Icons.download_rounded),
+                icon: Icon(
+                  Icons.download_rounded,
+                  color: isDataLoadNecessary ? Colors.amber : Colors.white,
+                ),
                 onPressed: (() async {
                   FilePickerResult? result = await (FilePicker.platform
                       .pickFiles(type: FileType.any, allowMultiple: false));
@@ -93,7 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     final fileName = result.files.first.name;
                     loadPlanesFromString(String.fromCharCodes(fileBytes!));
                     savePlanes(fileName, String.fromCharCodes(fileBytes));
-                    setState(() {});
+                    setState(() {
+                      isDataLoadNecessary = false;
+                    });
                   }
                 })),
             IconButton(
