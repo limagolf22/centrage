@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: (() async {
                   FilePickerResult? result = await (FilePicker.platform
-                      .pickFiles(type: FileType.any, allowMultiple: false));
+                      .pickFiles(type: FileType.any, allowMultiple: false, withData: true));
                   if (result != null && result.files.isNotEmpty) {
                     final fileBytes = result.files.first.bytes;
                     final fileName = result.files.first.name;
