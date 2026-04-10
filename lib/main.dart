@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Centrage AC ENAC',
+      title: 'Centrage AC',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.cyan,
       ),
-      home: const MyHomePage(title: "Centrage AC ENAC"),
+      home: const MyHomePage(title: "Centrage AC"),
     );
   }
 }
@@ -101,7 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: (() async {
                   FilePickerResult? result = await (FilePicker.platform
-                      .pickFiles(type: FileType.any, allowMultiple: false, withData: true));
+                      .pickFiles(
+                          type: FileType.any,
+                          allowMultiple: false,
+                          withData: true));
                   if (result != null && result.files.isNotEmpty) {
                     final fileBytes = result.files.first.bytes;
                     final fileName = result.files.first.name;
