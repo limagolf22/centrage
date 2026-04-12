@@ -52,6 +52,7 @@ Future<bool> loadPlanesFile() async {
     var _planeList = await loadPlanesFromBundle('assets/datas/AderPlanes.yaml');
     loggerSave.fine("init load done from bundle");
     planeList = _planeList;
+    storedValues = updateConfigMapping();
     return false;
   }
 }
@@ -59,6 +60,7 @@ Future<bool> loadPlanesFile() async {
 void loadPlanesFromString(String yamlString) {
   var _planeList = loadPlanes(yamlString);
   planeList = _planeList;
+  storedValues = updateConfigMapping();
 }
 
 Future<void> savePlanesFile() async {}
@@ -93,6 +95,7 @@ Future<void> saveXlsxWithInt8List(
   var nameAvion = sheetObject.cell(CellIndex.indexByString("A3"));
   nameAvion.value = currentPlane.name;
 
+/*
   var fuelType = sheetObject.cell(CellIndex.indexByString("E8"));
   fuelType.value = currentPlane.fuelType.name;
 
@@ -142,7 +145,7 @@ Future<void> saveXlsxWithInt8List(
   freight.value = val.freight.value;
   var lFreight = sheetObject.cell(CellIndex.indexByString("D26"));
   lFreight.value = currentPlane.leverArm["freight"];
-
+*/
   var mTot = sheetObject.cell(CellIndex.indexByString("C28"));
   mTot.value = val.totalkg.value;
   var lTot = sheetObject.cell(CellIndex.indexByString("D28"));

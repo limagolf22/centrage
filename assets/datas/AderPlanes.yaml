@@ -12,15 +12,25 @@ F-GOVL:
       y: 900
     - x: 0.564
       y: 566
-  leverArm:
-    mainFuel: 1.12
-    crew: 0.41
-    pax: 1.19
-    freight: 1.3
-  maxFuel: 110
-  maxAuxFuel: 0
-  massPlane: 566
-  laPlane: 0.3595
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.3
+      max: 110.0
+  mass: 566.0
+  leverArm: 0.3595
 
 F-GLVY:
   gabarit:
@@ -34,15 +44,25 @@ F-GLVY:
       y: 900
     - x: 0.564
       y: 566
-  leverArm:
-    mainFuel: 1.12
-    crew: 0.41
-    pax: 1.19
-    freight: 1.3
-  maxFuel: 110
-  maxAuxFuel: 0
-  massPlane: 566
-  laPlane: 0.3595
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.3
+      max: 110.0
+  mass: 566.0
+  leverArm: 0.3595
 
 F-GGXU:
   gabarit:
@@ -56,15 +76,25 @@ F-GGXU:
       y: 900.0
     - x: 0.564
       y: 581.9
-  leverArm:
-    mainFuel: 1.12
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 0
-  massPlane: 581.9
-  laPlane: 0.3290
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.9
+      max: 110.0
+  mass: 581.9
+  leverArm: 0.3290
 
 F-GYRL:
   gabarit:
@@ -78,16 +108,29 @@ F-GYRL:
       y: 1000
     - x: 0.564
       y: 600
-  leverArm:
-    mainFuel: 1.12
-    auxFuel: 1.61
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 50
-  massPlane: 603.0
-  laPlane: 0.3159
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: auxFuel
+      type: avgas
+      leverArm: 1.61
+      max: 50.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.9
+      max: 110.0
+  mass: 603.0
+  leverArm: 0.3159
 
 F-GFMM:
   gabarit:
@@ -101,15 +144,25 @@ F-GFMM:
       y: 1000
     - x: 0.564
       y: 600
-  leverArm:
-    mainFuel: 1.12
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 0
-  massPlane: 604.0
-  laPlane: 0.2840
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.9
+      max: 110.0
+  mass: 604.0
+  leverArm: 0.2840
 
 F-GUAC:
   gabarit:
@@ -125,15 +178,25 @@ F-GUAC:
       y: 1150
     - x: 1.205
       y: 700
-  leverArm:
-    mainFuel: 1.075
-    crew: 1.165
-    pax: 2.095
-    freight: 2.6
-  maxFuel: 210
-  maxAuxFuel: 0
-  massPlane: 766.0
-  laPlane: 0.9494
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.075
+      max: 210.0
+    - name: crew
+      type: people
+      leverArm: 1.165
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 2.095
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 2.6
+      max: 110.0
+  mass: 766.0
+  leverArm: 0.9494
 
 F-GHEO:
   gabarit:
@@ -147,15 +210,25 @@ F-GHEO:
       y: 1406
     - x: 1.194
       y: 858
-  leverArm:
-    mainFuel: 1.219
-    crew: 1.040
-    pax: 1.880
-    freight: 2.413
-  maxFuel: 333
-  maxAuxFuel: 0
-  massPlane: 858.0
-  laPlane: 0.975
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.219
+      max: 333.0
+    - name: crew
+      type: people
+      leverArm: 1.040
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.880
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 2.413
+      max: 110.0
+  mass: 858.0
+  leverArm: 0.975
 
 F-GOSN:
   gabarit:
@@ -169,15 +242,25 @@ F-GOSN:
       y: 758
     - x: 0.927
       y: 544.5
-  leverArm:
-    mainFuel: 1.074
-    crew: 0.942
-    pax: 0.0
-    freight: 1.636
-  maxFuel: 130
-  maxAuxFuel: 0
-  massPlane: 544.5
-  laPlane: 0.778
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.074
+      max: 130.0
+    - name: crew
+      type: people
+      leverArm: 0.942
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 0.0
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.636
+      max: 110.0
+  mass: 544.5
+  leverArm: 0.778
 
 F-GSTY:
   gabarit:
@@ -191,15 +274,25 @@ F-GSTY:
       y: 1000
     - x: 0.564
       y: 586
-  leverArm:
-    mainFuel: 1.12
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 0
-  massPlane: 586
-  laPlane: 0.3530
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.9
+      max: 110.0
+  mass: 586.0
+  leverArm: 0.3530
 
 F-PMIN:
   gabarit:
@@ -211,15 +304,25 @@ F-PMIN:
       y: 599.0
     - x: 2.170
       y: 335.0
-  leverArm:
-    mainFuel: 2.794
-    crew: 1.9812
-    pax: 0.0
-    freight: 2.794
-  maxFuel: 80
-  maxAuxFuel: 0
-  massPlane: 335.0
-  laPlane: 2.0574
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 2.794
+      max: 80.0
+    - name: crew
+      type: people
+      leverArm: 1.9812
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 0.0
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 2.794
+      max: 110.0
+  mass: 335.0
+  leverArm: 2.0574
 
 F-GYKH:
   gabarit:
@@ -233,16 +336,29 @@ F-GYKH:
       y: 1060
     - x: 0.564
       y: 623
-  leverArm:
-    mainFuel: 1.12
-    auxFuel: 0.1
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 80
-  massPlane: 623.0
-  laPlane: 0.336
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: auxFuel
+      type: avgas
+      leverArm: 0.1
+      max: 80.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.9
+      max: 110.0
+  mass: 623.0
+  leverArm: 0.336
 
 F-HOLO:
   gabarit:
@@ -256,16 +372,29 @@ F-HOLO:
       y: 1100
     - x: 0.564
       y: 639
-  leverArm:
-    mainFuel: 1.12
-    auxFuel: 0.1
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 80
-  massPlane: 639.0
-  laPlane: 0.317
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: auxFuel
+      type: avgas
+      leverArm: 0.1
+      max: 80.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 1.9
+      max: 110.0
+  mass: 639.0
+  leverArm: 0.317
 
 F-GPHT:
   gabarit:
@@ -279,12 +408,22 @@ F-GPHT:
       y: 1043.0
     - x: 1.210
       y: 670.0
-  leverArm:
-    mainFuel: 1.22
-    crew: 1.02
-    pax: 1.85
-    freight: 2.41
-  maxFuel: 182
-  maxAuxFuel: 0
-  massPlane: 670.0
-  laPlane: 1.00
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.22
+      max: 182.0
+    - name: crew
+      type: people
+      leverArm: 1.02
+      max: 110.0
+    - name: pax
+      type: people
+      leverArm: 1.85
+      max: 110.0
+    - name: freight
+      type: weight
+      leverArm: 2.41
+      max: 110.0
+  mass: 670.0
+  leverArm: 1.00
