@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group('YAML import', () {
     test('file should be imported', () async {
-      File file = File("test/assets/AderPlanesTest.yaml");
+      File file = File("test/assets/EnacPlanesTest.yaml");
       final res = loadPlanes(file.readAsStringSync());
       List<Plane> expectedplaneList = [
         Plane(
