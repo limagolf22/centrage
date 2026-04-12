@@ -9,9 +9,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-enum SaveState { SAVED, NOTSAVED }
+enum SaveState { saved, notSaved }
 
-SaveState saveS = SaveState.SAVED;
+SaveState saveS = SaveState.saved;
 
 void main() {
   Logger.root.level = Level.FINE; // defaults to Level.INFO
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Centrage AC ENAC',
+      title: 'Centrage AC',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.cyan,
       ),
-      home: const MyHomePage(title: "Centrage AC ENAC"),
+      home: const MyHomePage(title: "Centrage AC"),
     );
   }
 }
@@ -72,14 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     values.totalkg.addListener(() {
-      if (saveS == SaveState.SAVED) {
-        saveS = SaveState.NOTSAVED;
+      if (saveS == SaveState.saved) {
+        saveS = SaveState.notSaved;
         setState(() {});
       }
     });
     values.totalNm.addListener(() {
-      if (saveS == SaveState.SAVED) {
-        saveS = SaveState.NOTSAVED;
+      if (saveS == SaveState.saved) {
+        saveS = SaveState.notSaved;
         setState(() {});
       }
     });
@@ -97,11 +97,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: const Color.fromARGB(255, 255, 255, 255),
                 icon: Icon(
                   Icons.download_rounded,
-                  color: isDataLoadNecessary ? Colors.amber : Colors.white,
+                  color: isDataLoadNecessary ? Colors.amber : Colors.grey,
                 ),
                 onPressed: (() async {
                   FilePickerResult? result = await (FilePicker.platform
-                      .pickFiles(type: FileType.any, allowMultiple: false));
+                      .pickFiles(
+                          type: FileType.any,
+                          allowMultiple: false,
+                          withData: true));
                   if (result != null && result.files.isNotEmpty) {
                     final fileBytes = result.files.first.bytes;
                     final fileName = result.files.first.name;
@@ -113,13 +116,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 })),
             IconButton(
-              color: saveS == SaveState.SAVED
-                  ? const Color.fromARGB(255, 255, 255, 255)
-                  : const Color.fromARGB(255, 255, 0, 0),
+              color: saveS == SaveState.saved
+                  ? Colors.grey
+                  : Colors.red,
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
-                saveS = SaveState.SAVED;
+                saveS = SaveState.saved;
                 saveXlsx(values, currentPlane.name);
                 setState(() {});
               },

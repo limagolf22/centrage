@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 
-const fuelDensities = {"AVGAS": 0.72, "JETA1": 0.8};
+const fuelDensities = {"avgas": 0.72, "jetA1": 0.8};
 
-enum FuelType { AVGAS, JETA1 }
+enum FuelType { avgas, jetA1 }
 
 class Plane {
   String name;
@@ -14,7 +14,7 @@ class Plane {
 
   Plane(this.name, this.gabarit, this.leverArm, this.maxFuel, this.maxAuxFuel,
       this.massPlane, this.laPlane,
-      {this.fuelType = FuelType.AVGAS});
+      {this.fuelType = FuelType.avgas});
 
   @override
   bool operator ==(Object other) {
