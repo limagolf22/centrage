@@ -2,9 +2,11 @@ name: cicd
 
 on:
   push:
-
-env:
-  PATH_TO_APP : awesome_app
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
     ci:

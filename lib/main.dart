@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: const Color.fromARGB(255, 255, 255, 255),
                 icon: Icon(
                   Icons.download_rounded,
-                  color: isDataLoadNecessary ? Colors.amber : Colors.white,
+                  color: isDataLoadNecessary ? Colors.amber : Colors.grey,
                 ),
                 onPressed: (() async {
                   FilePickerResult? result = await (FilePicker.platform
@@ -117,8 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 })),
             IconButton(
               color: saveS == SaveState.saved
-                  ? const Color.fromARGB(255, 255, 255, 255)
-                  : const Color.fromARGB(255, 255, 0, 0),
+                  ? Colors.grey
+                  : Colors.red,
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
