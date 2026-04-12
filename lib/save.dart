@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:centrage/plane_datas.dart';
 import 'package:centrage/values.dart';
 import 'package:flutter/services.dart';

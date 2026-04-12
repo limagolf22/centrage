@@ -28,7 +28,7 @@ jobs:
         - name: Install dependencies
           run: flutter pub get
         - name: Build app for web
-          run: flutter build web --base-href "${{ steps.pages.outputs.base_path }}/"
+          run: flutter build web --release --base-href "${{ steps.pages.outputs.base_path }}/"
 
         - name: Upload artifact
           uses: actions/upload-pages-artifact@v3

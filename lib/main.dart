@@ -9,9 +9,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-enum SaveState { SAVED, NOTSAVED }
+enum SaveState { saved, notSaved }
 
-SaveState saveS = SaveState.SAVED;
+SaveState saveS = SaveState.saved;
 
 void main() {
   Logger.root.level = Level.FINE; // defaults to Level.INFO
@@ -72,14 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     values.totalkg.addListener(() {
-      if (saveS == SaveState.SAVED) {
-        saveS = SaveState.NOTSAVED;
+      if (saveS == SaveState.saved) {
+        saveS = SaveState.notSaved;
         setState(() {});
       }
     });
     values.totalNm.addListener(() {
-      if (saveS == SaveState.SAVED) {
-        saveS = SaveState.NOTSAVED;
+      if (saveS == SaveState.saved) {
+        saveS = SaveState.notSaved;
         setState(() {});
       }
     });
@@ -116,13 +116,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 })),
             IconButton(
-              color: saveS == SaveState.SAVED
+              color: saveS == SaveState.saved
                   ? const Color.fromARGB(255, 255, 255, 255)
                   : const Color.fromARGB(255, 255, 0, 0),
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
-                saveS = SaveState.SAVED;
+                saveS = SaveState.saved;
                 saveXlsx(values, currentPlane.name);
                 setState(() {});
               },
