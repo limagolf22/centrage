@@ -1,3 +1,4 @@
+import 'package:centrage/api.dart';
 import 'package:centrage/chart.dart';
 import 'package:centrage/input.dart';
 import 'package:centrage/plane_datas.dart';
@@ -8,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+
 
 enum SaveState { saved, notSaved }
 
@@ -58,7 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
     getExportDir();
     getImportDir().then((value) {
       loadPlanesFile().then((success) {
-        values.resetNotifiers(planeList[0]);
+        // Apply URL parameters after loading planes data
+        Map<String, String> urlParams = getUrlParameters();
+        values.resetNotifiers(applyUrlParameters(urlParams)??planeList[0]);
         setState((() {
           isDataLoadNecessary = !success;
           _inputKey = UniqueKey();
