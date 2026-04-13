@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     getExportDir();
     getImportDir().then((value) {
       loadPlanesFile().then((success) => setState((() {
+            currentPlane = planeList[0];
             isDataLoadNecessary = !success;
           })));
     });

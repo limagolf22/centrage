@@ -74,22 +74,22 @@ class Slot {
 
 List<Plane> planeList = [
   Plane(
-      "F-GOVL",
+      "F-GSTY",
       [
-        const Point(0.205, 566),
-        const Point(0.205, 750),
-        const Point(0.428, 900),
-        const Point(0.564, 900),
-        const Point(0.564, 566)
+        const Point(0.205, 586),
+        const Point(0.205, 740),
+        const Point(0.420, 980),
+        const Point(0.564, 1000),
+        const Point(0.564, 586)
       ],
       [
         Slot("mainFuel", SlotType.avgas, 1.12, 110, null, null),
-        Slot("crew", SlotType.people, 0.41, 110, null, null),
-        Slot("pax", SlotType.people, 1.19, 110, null, null),
-        Slot("freight", SlotType.weight, 1.3, 110, null, null),
+        Slot("crew", SlotType.people, 0.41, 300, null, null),
+        Slot("pax", SlotType.people, 1.19, 300, null, null),
+        Slot("freight", SlotType.weight, 1.9, 100, null, null),
       ],
-      566,
-      0.3595)
+      586,
+      0.3530)
 ];
 
 Plane currentPlane = planeList[0];
