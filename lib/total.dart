@@ -34,9 +34,9 @@ class _TotalLabelState extends State<TotalLabel> {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: Text(
-          "masse totale : " +
+          "masse : " +
               ((widget.valtotkg.value * 10).round() / 10).toString() +
-              " kg, bras de levier : " +
+              " kg, centre de gravité : " +
               ((widget.valtotNm.value * 1000).round() / 1000).toString() +
               " m",
           style: TextStyle(

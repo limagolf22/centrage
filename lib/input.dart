@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Input extends StatefulWidget {
   final ValueNotifier<double> valNot;
-  final double min, max;
+  final double min, max, step;
   final String label;
   final String unit;
 
@@ -13,7 +13,8 @@ class Input extends StatefulWidget {
       required this.min,
       required this.max,
       required this.label,
-      required this.unit})
+      required this.unit,
+      required this.step})
       : super(key: key);
 
   @override
@@ -41,16 +42,17 @@ class _InputState extends State<Input> {
             mainAxisSize: MainAxisSize.max,
             children: [
                 SizedBox(
-                    width: 45,
+                    width: 60,
                     child: Text(widget.label, textAlign: TextAlign.left)),
                 SizedBox(
-                    width: (MediaQuery.of(context).size.width) - 140,
+                    width: (MediaQuery.of(context).size.width) - 155,
                     child: Slider(
                         value: min(widget.max, max(widget.min, _val)),
                         onChanged: onSliderChanged,
                         min: widget.min,
                         max: widget.max,
-                        divisions: (widget.max - widget.min).floor() * 2)),
+                        divisions:
+                            ((widget.max - widget.min) / widget.step).floor())),
                 SizedBox(
                     width: 93,
                     child: Text(

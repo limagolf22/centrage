@@ -12,35 +12,22 @@ F-GOVL:
       y: 900
     - x: 0.564
       y: 566
-  leverArm:
-    mainFuel: 1.12
-    crew: 0.41
-    pax: 1.19
-    freight: 1.3
-  maxFuel: 110
-  maxAuxFuel: 0
-  massPlane: 566
-  laPlane: 0.3595
-
-F-GYRL:
-  gabarit:
-    - x: 0.205
-      y: 600
-    - x: 0.205
-      y: 760
-    - x: 0.428
-      y: 1000
-    - x: 0.564
-      y: 1000
-    - x: 0.564
-      y: 600
-  leverArm:
-    mainFuel: 1.12
-    auxFuel: 1.61
-    crew: 0.41
-    pax: 1.19
-    freight: 1.9
-  maxFuel: 110
-  maxAuxFuel: 50
-  massPlane: 603.0
-  laPlane: 0.3159
+  slots:
+    - name: mainFuel
+      type: avgas
+      leverArm: 1.12
+      max: 110.0
+    - name: crew
+      type: people
+      leverArm: 0.41
+      max: 110.0
+    - name: pax  
+      type: people
+      leverArm: 1.19
+      max: 110.0
+    - name: freight  
+      type: weight
+      leverArm: 1.3
+      max: 110.0
+  mass: 566.0
+  leverArm: 0.3595

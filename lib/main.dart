@@ -60,15 +60,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Values values = Values();
   bool isDataLoadNecessary = false;
+  Key _inputKey = UniqueKey();
 
   @override
   void initState() {
     super.initState();
     getExportDir();
     getImportDir().then((value) {
-      loadPlanesFile().then((success) => setState((() {
-            isDataLoadNecessary = !success;
-          })));
+      loadPlanesFile().then((success) {
+        currentPlane = planeList[0];
+        values.resetNotifiers(currentPlane);
+        setState((() {
+          isDataLoadNecessary = !success;
+        }));
+      });
     });
 
     values.totalkg.addListener(() {
@@ -110,15 +115,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     final fileName = result.files.first.name;
                     loadPlanesFromString(String.fromCharCodes(fileBytes!));
                     savePlanes(fileName, String.fromCharCodes(fileBytes));
+                    currentPlane = planeList[0];
+                    values.resetNotifiers(currentPlane);
                     setState(() {
                       isDataLoadNecessary = false;
+                      _inputKey = UniqueKey();
                     });
                   }
                 })),
             IconButton(
-              color: saveS == SaveState.saved
-                  ? Colors.grey
-                  : Colors.red,
+              color: saveS == SaveState.saved ? Colors.grey : Colors.red,
               icon: const Icon(Icons.save),
               tooltip: 'Save the configuration',
               onPressed: () {
@@ -139,56 +145,60 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     // values.updateTot();
                     values.resetNotifiers(plane);
-                    setState(() {});
+                    setState(() {
+                      _inputKey = UniqueKey();
+                    });
                     Navigator.pop(context);
                   },
                 )
             ])),
-        body: Column(
-          children: [
-            Input(
-                min: 0.0,
-                max: currentPlane.maxFuel.toDouble(),
-                valNot: values.mainFuel,
-                label: "main\nfuel ",
-                unit: "L"),
-            Input(
-                min: 0.0,
-                max: currentPlane.maxAuxFuel.toDouble(),
-                valNot: values.auxFuel,
-                label: "aux\nfuel ",
-                unit: "L"),
-            Input(
-                min: 0.0,
-                max: 250.0,
-                valNot: values.crew,
-                label: "crew ",
-                unit: "kg"),
-            Input(
-                min: 0.0,
-                max: 250.0,
-                valNot: values.pax,
-                label: "pax ",
-                unit: "kg"),
-            Input(
-                min: 0.0,
-                max: 65.0,
-                valNot: values.freight,
-                label: "freight ",
-                unit: "kg"),
-            Text(
-              currentPlane.name,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-                height: 200,
-                child: Chart(totalkg: values.totalkg, totalNm: values.totalNm)),
-            TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
-            Text(impDir == "" ? "" : "saved in : " + impDir,
-                style: const TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
-          ],
-        ));
+        body: currentPlane.slots.isNotEmpty
+            ? Column(
+                children: [
+                      Column(
+                          key: _inputKey,
+                          children: (currentPlane.slots
+                              .asMap()
+                              .entries
+                              .map((s) => Input(
+                                  label: s.value.name,
+                                  min: s.value.min ?? 0.0,
+                                  max: s.value.max,
+                                  unit: getUnit(s.value.type),
+                                  step: s.value.step ?? 0.5,
+                                  valNot: values.values[s.key]))
+                              .toList()))
+                    ].cast<Widget>() +
+                    [
+                      Text(
+                        currentPlane.name,
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                          height: 200,
+                          child: Chart(
+                              totalkg: values.totalkg,
+                              totalNm: values.totalNm)),
+                      TotalLabel(
+                          valtotkg: values.totalkg, valtotNm: values.totalNm),
+                      Text(impDir == "" ? "" : "saved in : " + impDir,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 0, 0)))
+                    ],
+              )
+            : const Text("Pas de données chargées"));
+  }
+}
+
+String getUnit(SlotType type) {
+  switch (type) {
+    case SlotType.weight:
+      return "kg";
+    case SlotType.people:
+      return "kg";
+    default:
+      return "L";
   }
 }

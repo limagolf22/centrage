@@ -1,0 +1,89 @@
+# version 12/04/2026
+
+D-5774-15m:
+  gabarit:
+    - x: 0.280
+      y: 330
+    - x: 0.280
+      y: 525
+    - x: 0.387
+      y: 525
+    - x: 0.400
+      y: 410
+    - x: 0.400
+      y: 315
+    - x: 0.393
+      y: 310
+  slots:
+    - name: gueuse avant  
+      type: weight
+      leverArm: -1.650
+      min: 0.0
+      max: 10.0
+      unit: 0.5
+    - name: pilote
+      type: people
+      leverArm: -0.511
+      min: 66.2
+      max: 117.8
+    - name: bagage
+      type: weight
+      leverArm: -0.150
+      min: 0.0
+      max: 5.0
+    - name: ballast aile
+      type: water
+      leverArm: 0.270
+      min: 0.0
+      max: 190.0
+    - name: ballast queue
+      type: water
+      leverArm: 4.230
+      min: 0.0
+      max: 12.0
+  mass: 274.0
+  leverArm: 0.620
+
+D-5774-18m:
+  gabarit:
+    - x: 0.280
+      y: 330
+    - x: 0.280
+      y: 525
+    - x: 0.387
+      y: 525
+    - x: 0.400
+      y: 410
+    - x: 0.400
+      y: 315
+    - x: 0.393
+      y: 310
+  slots:
+    - name: gueuse avant  
+      type: weight
+      leverArm: -1.650
+      min: 0.0
+      max: 10.0
+      unit: 0.5
+    - name: pilote
+      type: people
+      leverArm: -0.511
+      min: 69.2
+      max: 122.1
+    - name: bagage
+      type: weight
+      leverArm: -0.150
+      min: 0.0
+      max: 5.0
+    - name: ballast aile
+      type: water
+      leverArm: 0.270
+      min: 0.0
+      max: 190.0
+    - name: ballast queue
+      type: water
+      leverArm: 4.230
+      min: 0.0
+      max: 12.0
+  mass: 280.0
+  leverArm: 0.625

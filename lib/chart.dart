@@ -35,7 +35,9 @@ class _ChartState extends State<Chart> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: LayoutBuilder(
             builder: (_, constraints) => CustomPaint(
-                size: Size(constraints.maxWidth, constraints.maxHeight),
+                size: Size(
+                    min(constraints.maxWidth, constraints.maxHeight * 2.0),
+                    constraints.maxHeight),
                 painter: ChartPainter(widget.totalkg, widget.totalNm))));
   }
 }

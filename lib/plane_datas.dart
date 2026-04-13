@@ -18,12 +18,12 @@ List<Plane> loadPlanes(String yamlString) {
     List<Point> gabarit = [
       for (dynamic pt in value['gabarit']) Point((pt['x']!), pt['y']!)
     ];
-    Map<String, num> leverArm = {
-      for (var entry in value['leverArm'].entries) entry.key: entry.value
-    }; // [for (Map<String, double> pt in value['leverArm']) Point((pt['x']!),pt['y']!) ]  ;
+    List<Slot> slots = [
+      for (var s in value['slots'])
+        Slot(s['name'], SlotType.values.byName(s['type']), s['leverArm'], s['max'], s['min'], s['unit'])
+    ];
 
-    planeList.add(Plane(key, gabarit, leverArm, value['maxFuel'],
-        value['maxAuxFuel'], value['massPlane'], value['laPlane']));
+    planeList.add(Plane(key, gabarit, slots, value['mass'], value['leverArm']));
   });
   return planeList;
 }

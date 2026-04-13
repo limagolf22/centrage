@@ -20,31 +20,14 @@ void main() {
               const Point(0.564, 900),
               const Point(0.564, 566)
             ],
-            {"mainFuel": 1.12, "crew": 0.41, "pax": 1.19, "freight": 1.3},
-            110,
-            0,
-            566,
-            0.3595),
-        Plane(
-            "F-GYRL",
             [
-              const Point(0.205, 600),
-              const Point(0.205, 760),
-              const Point(0.428, 1000),
-              const Point(0.564, 1000),
-              const Point(0.564, 600)
+              Slot("mainFuel", SlotType.avgas, 1.12,110,null,null),
+              Slot("crew", SlotType.people, 0.41,110,null,null),
+              Slot("pax", SlotType.people, 1.19,110,null,null),
+              Slot("freight", SlotType.weight, 1.3,110,null,null),
             ],
-            {
-              "mainFuel": 1.12,
-              "auxFuel": 1.61,
-              "crew": 0.41,
-              "pax": 1.19,
-              "freight": 1.9
-            },
-            110,
-            50,
-            603.0,
-            0.3159),
+            566,
+            0.3595)
       ];
       expect(res, expectedplaneList);
     });
