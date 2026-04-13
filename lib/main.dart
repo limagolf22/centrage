@@ -67,10 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     getExportDir();
     getImportDir().then((value) {
-      loadPlanesFile().then((success) => setState((() {
-            currentPlane = planeList[0];
-            isDataLoadNecessary = !success;
-          })));
+      loadPlanesFile().then((success) {
+        currentPlane = planeList[0];
+        values.resetNotifiers(currentPlane);
+        setState((() {
+          isDataLoadNecessary = !success;
+        }));
+      });
     });
 
     values.totalkg.addListener(() {
@@ -112,8 +115,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     final fileName = result.files.first.name;
                     loadPlanesFromString(String.fromCharCodes(fileBytes!));
                     savePlanes(fileName, String.fromCharCodes(fileBytes));
+                    currentPlane = planeList[0];
+                    values.resetNotifiers(currentPlane);
                     setState(() {
                       isDataLoadNecessary = false;
+                      _inputKey = UniqueKey();
                     });
                   }
                 })),
@@ -146,39 +152,43 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 )
             ])),
-        body: Column(
-          children: [
-                Column(
-                    key: _inputKey,
-                    children: (currentPlane.slots
-                        .asMap()
-                        .entries
-                        .map((s) => Input(
-                            label: s.value.name,
-                            min: s.value.min ?? 0.0,
-                            max: s.value.max,
-                            unit: getUnit(s.value.type),
-                            step: s.value.step ?? 0.5,
-                            valNot: values.values[s.key]))
-                        .toList()))
-              ].cast<Widget>() +
-              [
-                Text(
-                  currentPlane.name,
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                    height: 200,
-                    child: Chart(
-                        totalkg: values.totalkg, totalNm: values.totalNm)),
-                TotalLabel(valtotkg: values.totalkg, valtotNm: values.totalNm),
-                Text(impDir == "" ? "" : "saved in : " + impDir,
-                    style:
-                        const TextStyle(color: Color.fromARGB(255, 255, 0, 0)))
-              ],
-        ));
+        body: currentPlane.slots.isNotEmpty
+            ? Column(
+                children: [
+                      Column(
+                          key: _inputKey,
+                          children: (currentPlane.slots
+                              .asMap()
+                              .entries
+                              .map((s) => Input(
+                                  label: s.value.name,
+                                  min: s.value.min ?? 0.0,
+                                  max: s.value.max,
+                                  unit: getUnit(s.value.type),
+                                  step: s.value.step ?? 0.5,
+                                  valNot: values.values[s.key]))
+                              .toList()))
+                    ].cast<Widget>() +
+                    [
+                      Text(
+                        currentPlane.name,
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                          height: 200,
+                          child: Chart(
+                              totalkg: values.totalkg,
+                              totalNm: values.totalNm)),
+                      TotalLabel(
+                          valtotkg: values.totalkg, valtotNm: values.totalNm),
+                      Text(impDir == "" ? "" : "saved in : " + impDir,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 0, 0)))
+                    ],
+              )
+            : const Text("Pas de données chargées"));
   }
 }
 

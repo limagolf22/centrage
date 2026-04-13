@@ -72,25 +72,7 @@ class Slot {
   }
 }
 
-List<Plane> planeList = [
-  Plane(
-      "F-GSTY",
-      [
-        const Point(0.205, 586),
-        const Point(0.205, 740),
-        const Point(0.420, 980),
-        const Point(0.564, 1000),
-        const Point(0.564, 586)
-      ],
-      [
-        Slot("mainFuel", SlotType.avgas, 1.12, 110, null, null),
-        Slot("crew", SlotType.people, 0.41, 300, null, null),
-        Slot("pax", SlotType.people, 1.19, 300, null, null),
-        Slot("freight", SlotType.weight, 1.9, 100, null, null),
-      ],
-      586,
-      0.3530)
-];
+List<Plane> planeList = [Plane("XXXXX", [], [], 1.0, 1.0)];
 
 Plane currentPlane = planeList[0];
 
@@ -120,8 +102,10 @@ class Values {
   void resetNotifiers(Plane plane) {
     // Save current config to cache
     for (var i = 0; i < values.length; i++) {
-      (storedValues[currentPlane.name])![currentPlane.slots[i].name] =
-          values[i].value;
+      if (storedValues[currentPlane.name] != null) {
+        (storedValues[currentPlane.name])![currentPlane.slots[i].name] =
+            values[i].value;
+      }
     }
 
     currentPlane = plane;
@@ -135,7 +119,9 @@ class Values {
     }
     // Load config from cache
     for (var i = 0; i < values.length; i++) {
-      values[i].value = (storedValues[plane.name])![plane.slots[i].name]!;
+      if (storedValues[plane.name] != null) {
+        values[i].value = (storedValues[plane.name])![plane.slots[i].name]!;
+      }
     }
     updateTot();
   }
