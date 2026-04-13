@@ -26,21 +26,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Centrage AC',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.cyan,
       ),
       home: const MyHomePage(title: "Centrage AC"),
@@ -68,10 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
     getExportDir();
     getImportDir().then((value) {
       loadPlanesFile().then((success) {
-        currentPlane = planeList[0];
-        values.resetNotifiers(currentPlane);
+        values.resetNotifiers(planeList[0]);
         setState((() {
           isDataLoadNecessary = !success;
+          _inputKey = UniqueKey();
         }));
       });
     });
@@ -115,8 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     final fileName = result.files.first.name;
                     loadPlanesFromString(String.fromCharCodes(fileBytes!));
                     savePlanes(fileName, String.fromCharCodes(fileBytes));
-                    currentPlane = planeList[0];
-                    values.resetNotifiers(currentPlane);
+                    values.resetNotifiers(planeList[0]);
                     setState(() {
                       isDataLoadNecessary = false;
                       _inputKey = UniqueKey();
@@ -188,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: Color.fromARGB(255, 255, 0, 0)))
                     ],
               )
-            : const Text("Pas de données chargées"));
+            : const Center(child: Text("Pas de données chargées")));
   }
 }
 

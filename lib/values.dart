@@ -72,48 +72,7 @@ class Slot {
   }
 }
 
-List<Plane> planeList = [
-  Plane(
-    "D-5774-15m",
-    [
-      const Point(0.280, 330),
-      const Point(0.280, 525),
-      const Point(0.387, 525),
-      const Point(0.400, 410),
-      const Point(0.400, 315),
-      const Point(0.393, 310),
-    ],
-    [
-      Slot("gueuse avant", SlotType.weight, -1.650, 10.0, 0.0, 0.5),
-      Slot("pilote", SlotType.people, -0.511, 117.8, 66.2, null),
-      Slot("bagage", SlotType.weight, -0.150, 5.0, 0.0, null),
-      Slot("ballast aile", SlotType.water, 0.270, 190.0, 0.0, null),
-      Slot("ballast queue", SlotType.water, 4.230, 12.0, 0.0, null),
-    ],
-    274.0,
-    0.620,
-  ),
-  Plane(
-    "D-5774-18m",
-    [
-      const Point(0.280, 330),
-      const Point(0.280, 525),
-      const Point(0.387, 525),
-      const Point(0.400, 410),
-      const Point(0.400, 315),
-      const Point(0.393, 310),
-    ],
-    [
-      Slot("gueuse avant", SlotType.weight, -1.650, 10.0, 0.0, 0.5),
-      Slot("pilote", SlotType.people, -0.511, 122.1, 69.2, null),
-      Slot("bagage", SlotType.weight, -0.150, 5.0, 0.0, null),
-      Slot("ballast aile", SlotType.water, 0.270, 190.0, 0.0, null),
-      Slot("ballast queue", SlotType.water, 4.230, 12.0, 0.0, null),
-    ],
-    280.0,
-    0.625,
-  ),
-];
+List<Plane> planeList = [Plane("XXXXX", [], [], 1.0, 1.0)];
 
 Plane currentPlane = planeList[0];
 

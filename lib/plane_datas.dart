@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:centrage/save.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
 import 'package:centrage/values.dart';
@@ -20,7 +21,8 @@ List<Plane> loadPlanes(String yamlString) {
     ];
     List<Slot> slots = [
       for (var s in value['slots'])
-        Slot(s['name'], SlotType.values.byName(s['type']), s['leverArm'], s['max'], s['min'], s['unit'])
+        Slot(s['name'], SlotType.values.byName(s['type']), s['leverArm'],
+            s['max'], s['min'], s['unit'])
     ];
 
     planeList.add(Plane(key, gabarit, slots, value['mass'], value['leverArm']));
@@ -29,7 +31,9 @@ List<Plane> loadPlanes(String yamlString) {
 }
 
 Future<void> savePlanes(String name, String yamlString) async {
-  File("$impDir/datas/" + name)
-    ..createSync(recursive: true)
-    ..writeAsStringSync(yamlString);
+  if (!kIsWeb) {
+    File("$impDir/datas/" + name)
+      ..createSync(recursive: true)
+      ..writeAsStringSync(yamlString);
+  }
 }

@@ -6,6 +6,8 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
+
 
 String impDir = "";
 String expDir = "";
@@ -13,7 +15,10 @@ String expDir = "";
 final loggerSave = Logger("Save");
 
 Future<void> getImportDir() async {
-  if (Platform.isAndroid) {
+  if(kIsWeb){
+
+  }
+  else if (Platform.isAndroid) {
     var directory = await getExternalStorageDirectory();
     impDir = directory!.path;
     loggerSave.fine("import dir : " + impDir);
@@ -27,7 +32,10 @@ Future<void> getImportDir() async {
 }
 
 Future<void> getExportDir() async {
-  if (Platform.isAndroid) {
+  if(kIsWeb){
+
+  }
+  else if (Platform.isAndroid) {
     var directory = await getExternalStorageDirectory();
     expDir = directory!.path;
     loggerSave.fine("export dir : " + expDir);
@@ -42,14 +50,14 @@ Future<void> getExportDir() async {
 /// Loads Planes Files. Returns [true] if they are loaded from an
 /// imported file, and [false] if datas come from internal storage.
 Future<bool> loadPlanesFile() async {
-  if (impDir != "" && File(impDir + "/datas/AderPlanes.yaml").existsSync()) {
+if (impDir != "" && File(impDir + "/datas/ATVV.yaml").existsSync()) {
     loggerSave.fine("init load done from datas");
-    File file = File(impDir + "/datas/AderPlanes.yaml");
+    File file = File(impDir + "/datas/ATVV.yaml");
     String content = await file.readAsString();
     loadPlanesFromString(content);
     return true;
   } else {
-    var _planeList = await loadPlanesFromBundle('assets/datas/AderPlanes.yaml');
+    var _planeList = await loadPlanesFromBundle('assets/datas/ATVV.yaml');
     loggerSave.fine("init load done from bundle");
     planeList = _planeList;
     storedValues = updateConfigMapping();

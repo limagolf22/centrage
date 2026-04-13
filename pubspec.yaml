@@ -82,6 +82,7 @@ flutter:
   assets:
     - assets/datas/EnacPlanes.yaml
     - assets/datas/AderPlanes.yaml
+    - assets/datas/ATVV.yaml
     - assets/datas/feuille-centrage-template.xlsx
     - assets/datas/feuille-centrage-template-v2.xlsx
   #   - images/a_dot_burr.jpeg
