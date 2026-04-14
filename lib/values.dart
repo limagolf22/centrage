@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
+import 'package:centrage/config.dart';
 
 enum SlotType { avgas, jetA1, water, people, weight }
 
@@ -76,14 +77,23 @@ List<Plane> planeList = [Plane("XXXXX", [], [], 1.0, 1.0)];
 
 Plane currentPlane = planeList[0];
 
-Map<String, Map<String, double>> updateConfigMapping() {
+Map<String, Map<String, double>> initConfigMapping() {
   return {
     for (var item in planeList)
-      item.name: {for (var slot in item.slots) slot.name: slot.min ?? 0.0}
+      item.name: {
+        for (var slot in item.slots)
+          slot.name: min(
+              slot.max,
+              max(
+                  slot.min ?? 0.0,
+                  (slot.type == SlotType.people
+                      ? config.pilotWeight + config.parachuteWeight
+                      : 0.0)))
+      }
   };
 }
 
-Map<String, Map<String, double>> storedValues = updateConfigMapping();
+Map<String, Map<String, double>> storedValues = initConfigMapping();
 
 double totalkgfuelMax = 0.0;
 double totalNmfuelMax = 0.0;

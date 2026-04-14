@@ -60,7 +60,7 @@ if (impDir != "" && File(impDir + "/datas/ATVV.yaml").existsSync()) {
     var _planeList = await loadPlanesFromBundle('assets/datas/ATVV.yaml');
     loggerSave.fine("init load done from bundle");
     planeList = _planeList;
-    storedValues = updateConfigMapping();
+    storedValues = initConfigMapping();
     return false;
   }
 }
@@ -68,7 +68,7 @@ if (impDir != "" && File(impDir + "/datas/ATVV.yaml").existsSync()) {
 void loadPlanesFromString(String yamlString) {
   var _planeList = loadPlanes(yamlString);
   planeList = _planeList;
-  storedValues = updateConfigMapping();
+  storedValues = initConfigMapping();
 }
 
 Future<void> savePlanesFile() async {}
