@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Centrage AC',
+      title: 'Centrage',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
       ),
-      home: const MyHomePage(title: "Centrage AC"),
+      home: const MyHomePage(title: "Centrage"),
     );
   }
 }
@@ -156,13 +156,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void _applyConfigWeightToCurrentPlane(double weight, double paraWeight) {
     for (var i = 0; i < values.values.length; i++) {
       if (storedValues[currentPlane.name] != null) {
-        (storedValues[currentPlane.name])![currentPlane.slots[i].name] =
+        (storedValues[currentPlane.name])![currentPlane.nodes[i].name] =
             values.values[i].value;
       }
     }
     // Update only people section in cache
     for (var item in planeList) {
-      for (var slot in item.slots) {
+      for (var slot in item.getSlots()) {
         if (slot.type == SlotType.people) {
           storedValues[item.name]![slot.name] =
               min(slot.max, max(slot.min ?? 0.0, weight + paraWeight));
@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
     for (var i = 0; i < values.values.length; i++) {
       if (storedValues[currentPlane.name] != null) {
         values.values[i].value =
-            (storedValues[currentPlane.name])![currentPlane.slots[i].name]!;
+            (storedValues[currentPlane.name])![currentPlane.nodes[i].name]!;
       }
     }
   }
@@ -244,12 +244,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 )
             ])),
-        body: currentPlane.slots.isNotEmpty
+        body: currentPlane.nodes.isNotEmpty
             ? Column(
                 children: [
                       Column(
                           key: _inputKey,
-                          children: (currentPlane.slots
+                          children: (currentPlane
+                              .getSlots()
+                              .toList()
                               .asMap()
                               .entries
                               .map((s) => Input(

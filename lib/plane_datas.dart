@@ -19,15 +19,19 @@ List<Plane> loadPlanes(String yamlString) {
     List<Point> gabarit = [
       for (dynamic pt in value['gabarit']) Point((pt['x']!), pt['y']!)
     ];
-    List<Slot> slots = [
-      for (var s in value['slots'])
-        Slot(s['name'], SlotType.values.byName(s['type']), s['leverArm'],
-            s['max'], s['min'], s['unit'])
-    ];
+    List<Node> slots = [for (var n in value['slots']) retrieveNode(n)];
 
     planeList.add(Plane(key, gabarit, slots, value['mass'], value['leverArm']));
   });
   return planeList;
+}
+
+Node retrieveNode(dynamic n) {
+  return n['type'] != null
+      ? Slot(n['name'], SlotType.values.byName(n['type']), n['leverArm'],
+          n['max'], n['min'], n['unit'])
+      : (Group(n['name'], n['max'])
+        ..subnodes.addAll([for (var sn in n['subnodes']) retrieveNode(sn)]));
 }
 
 Future<void> savePlanes(String name, String yamlString) async {

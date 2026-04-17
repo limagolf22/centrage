@@ -7,10 +7,10 @@ enum SlotType { avgas, jetA1, water, people, weight }
 class Plane {
   String name;
   List<Point> gabarit;
-  List<Slot> slots;
+  List<Node> nodes;
   double mass, leverArm;
 
-  Plane(this.name, this.gabarit, this.slots, this.mass, this.leverArm);
+  Plane(this.name, this.gabarit, this.nodes, this.mass, this.leverArm);
 
   @override
   bool operator ==(Object other) {
@@ -23,7 +23,7 @@ class Plane {
     return other is Plane &&
         other.name == name &&
         listEquals(other.gabarit, gabarit) &&
-        listEquals(other.slots, slots) &&
+        listEquals(other.nodes, nodes) &&
         other.mass == mass &&
         other.leverArm == leverArm;
   }
@@ -33,22 +33,72 @@ class Plane {
     return Object.hash(
       name,
       Object.hashAll(gabarit),
-      Object.hashAll(slots),
+      Object.hashAll(nodes),
       mass,
       leverArm,
     );
   }
+
+  Iterable<Slot> getSlots() {
+    return nodes.expand((n) => n.flattenNode()).whereType<Slot>();
+  }
 }
 
-class Slot {
+sealed class Node {
   String name;
+  List<Node> subnodes = List.empty(growable: true);
+
+  Node(this.name);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is Node &&
+        other.name == name &&
+        listEquals(other.subnodes, subnodes);
+  }
+
+  @override
+  int get hashCode => Object.hash(name, Object.hashAll(subnodes));
+
+  List<Node> flattenNode() {
+    return [this] + subnodes.expand((n) => n.flattenNode()).toList();
+  }
+}
+
+class Group extends Node {
+  double? max;
+
+  Group(super.name, this.max);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is Group && super == other && other.max == max;
+  }
+
+  @override
+  int get hashCode => Object.hash(super.hashCode, max);
+}
+
+class Slot extends Node {
   SlotType type;
   double leverArm;
   double max;
   double? min;
   double? step;
 
-  Slot(this.name, this.type, this.leverArm, this.max, this.min, this.step);
+  Slot(super.name, this.type, this.leverArm, this.max, this.min, this.step);
 
   @override
   bool operator ==(Object other) {
@@ -59,7 +109,7 @@ class Slot {
       return false;
     }
     return other is Slot &&
-        other.name == name &&
+        super == other &&
         other.type == type &&
         other.leverArm == leverArm &&
         other.max == max &&
@@ -69,7 +119,7 @@ class Slot {
 
   @override
   int get hashCode {
-    return Object.hash(name, type, leverArm, max, min, step);
+    return Object.hash(super.hashCode, type, leverArm, max, min, step);
   }
 }
 
@@ -81,7 +131,7 @@ Map<String, Map<String, double>> initConfigMapping() {
   return {
     for (var item in planeList)
       item.name: {
-        for (var slot in item.slots)
+        for (var slot in item.getSlots())
           slot.name: min(
               slot.max,
               max(
@@ -113,7 +163,7 @@ class Values {
     // Save current config to cache
     for (var i = 0; i < values.length; i++) {
       if (storedValues[currentPlane.name] != null) {
-        (storedValues[currentPlane.name])![currentPlane.slots[i].name] =
+        (storedValues[currentPlane.name])![currentPlane.nodes[i].name] =
             values[i].value;
       }
     }
@@ -123,64 +173,65 @@ class Values {
       v.dispose();
     }
     values.clear();
-    values.addAll(plane.slots.map((s) => ValueNotifier(s.min ?? 0.0)));
+    values.addAll(plane.getSlots().map((s) => ValueNotifier(s.min ?? 0.0)));
     for (var v in values) {
       v.addListener(updateTot);
     }
     // Load config from cache
     for (var i = 0; i < values.length; i++) {
       if (storedValues[plane.name] != null) {
-        values[i].value = (storedValues[plane.name])![plane.slots[i].name]!;
+        values[i].value = (storedValues[plane.name])![plane.nodes[i].name]!;
       }
     }
     updateTot();
   }
 
   void updateTot() {
+    List<Slot> slots = currentPlane.getSlots().toList();
     double tKg = currentPlane.mass;
     for (var i = 0; i < values.length; i++) {
-      tKg += values[i].value * getDensity(currentPlane.slots[i].type);
+      tKg += values[i].value * getDensity(slots[i].type);
     }
 
     double tNm = currentPlane.mass * currentPlane.leverArm;
 
     for (var i = 0; i < values.length; i++) {
       tNm += values[i].value *
-          currentPlane.slots[i].leverArm *
-          getDensity(currentPlane.slots[i].type);
+          slots[i].leverArm *
+          getDensity(currentPlane.getSlots().elementAt(i).type);
     }
     tNm = (tNm / tKg * 10000).round() / 10000;
 
     totalkgfuelMax = currentPlane.mass;
     totalkgfuelMin = currentPlane.mass;
     for (var i = 0; i < values.length; i++) {
-      totalkgfuelMax += ((currentPlane.slots[i].type == SlotType.weight ||
-                  currentPlane.slots[i].type == SlotType.people)
+      totalkgfuelMax += ((slots[i].type == SlotType.weight ||
+                  slots[i].type == SlotType.people)
               ? values[i].value
-              : currentPlane.slots[i].max) *
-          getDensity(currentPlane.slots[i].type);
-      totalkgfuelMin += ((currentPlane.slots[i].type == SlotType.weight ||
-                  currentPlane.slots[i].type == SlotType.people)
+              : slots[i].max) *
+          getDensity(slots[i].type);
+      totalkgfuelMin += ((slots[i].type == SlotType.weight ||
+                  slots[i].type == SlotType.people)
               ? values[i].value
-              : currentPlane.slots[i].min ?? 0.0) *
-          getDensity(currentPlane.slots[i].type);
+              : slots[i].min ?? 0.0) *
+          getDensity(slots[i].type);
     }
 
     totalNmfuelMax = currentPlane.mass * currentPlane.leverArm;
     totalNmfuelMin = currentPlane.mass * currentPlane.leverArm;
     for (var i = 0; i < values.length; i++) {
-      totalNmfuelMax += ((currentPlane.slots[i].type == SlotType.weight ||
-                  currentPlane.slots[i].type == SlotType.people)
+      totalNmfuelMax += ((slots[i].type == SlotType.weight ||
+                  slots[i].type == SlotType.people)
               ? values[i].value
-              : currentPlane.slots[i].max) *
-          currentPlane.slots[i].leverArm *
-          getDensity(currentPlane.slots[i].type);
-      totalNmfuelMin += ((currentPlane.slots[i].type == SlotType.weight ||
-                  currentPlane.slots[i].type == SlotType.people)
+              : slots[i].max) *
+          slots[i].leverArm *
+          getDensity(slots[i].type);
+      totalNmfuelMin += ((slots[i].type == SlotType.weight ||
+                  slots[i].type == SlotType.people)
               ? values[i].value
-              : currentPlane.slots[i].min ?? 0.0) *
-          currentPlane.slots[i].leverArm *
-          getDensity(currentPlane.slots[i].type);
+              : slots[i].min ?? 0.0) *
+          slots[i].leverArm *
+          getDensity(slots[i].type);
     }
     totalNmfuelMax = (totalNmfuelMax / totalkgfuelMax * 10000).round() / 10000;
     totalNmfuelMin = (totalNmfuelMin / totalkgfuelMin * 10000).round() / 10000;

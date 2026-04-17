@@ -29,17 +29,14 @@ D-5774-15m:
     - name: bagage
       type: weight
       leverArm: -0.150
-      min: 0.0
       max: 5.0
     - name: ballast aile
       type: water
       leverArm: 0.270
-      min: 0.0
       max: 190.0
     - name: ballast queue
       type: water
       leverArm: 4.230
-      min: 0.0
       max: 12.0
   mass: 274.0
   leverArm: 0.620
@@ -62,7 +59,6 @@ D-5774-18m:
     - name: gueuse avant  
       type: weight
       leverArm: -1.650
-      min: 0.0
       max: 10.0
       unit: 0.5
     - name: pilote
@@ -73,17 +69,14 @@ D-5774-18m:
     - name: bagage
       type: weight
       leverArm: -0.150
-      min: 0.0
       max: 5.0
     - name: ballast aile
       type: water
       leverArm: 0.270
-      min: 0.0
       max: 190.0
     - name: ballast queue
       type: water
       leverArm: 4.230
-      min: 0.0
       max: 12.0
   mass: 280.0
   leverArm: 0.625

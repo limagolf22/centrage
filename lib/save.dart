@@ -103,7 +103,7 @@ Future<void> saveXlsxWithInt8List(
   sheetObject.cell(CellIndex.indexByString("E7")).setFormula("=C7 * D7");
 
   int i = 0;
-  for (Slot slot in currentPlane.slots) {
+  for (Slot slot in currentPlane.getSlots()) {
     sheetObject.cell(CellIndex.indexByString("B" + (8 + i).toString())).value =
         slot.name;
     sheetObject.cell(CellIndex.indexByString("C" + (8 + i).toString())).value =
