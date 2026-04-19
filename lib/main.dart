@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:centrage/api.dart';
 import 'package:centrage/chart.dart';
+import 'package:centrage/config.dart';
 import 'package:centrage/input.dart';
 import 'package:centrage/plane_datas.dart';
 import 'package:centrage/save.dart';
@@ -13,7 +17,10 @@ enum SaveState { saved, notSaved }
 
 SaveState saveS = SaveState.saved;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppConfig.init();
+
   Logger.root.level = Level.FINE; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     if (kDebugMode) {
@@ -26,24 +33,14 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Centrage AC',
+      title: 'Centrage',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.cyan,
       ),
-      home: const MyHomePage(title: "Centrage AC"),
+      home: const MyHomePage(title: "Centrage"),
     );
   }
 }
@@ -61,17 +58,24 @@ class _MyHomePageState extends State<MyHomePage> {
   Values values = Values();
   bool isDataLoadNecessary = false;
   Key _inputKey = UniqueKey();
+  final TextEditingController _pilotWeightController = TextEditingController();
+  final TextEditingController _parachuteWeightController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _pilotWeightController.text = config.pilotWeight.toString();
+    _parachuteWeightController.text = config.parachuteWeight.toString();
     getExportDir();
     getImportDir().then((value) {
       loadPlanesFile().then((success) {
-        currentPlane = planeList[0];
-        values.resetNotifiers(currentPlane);
+        // Apply URL parameters after loading planes data
+        Map<String, String> urlParams = getUrlParameters();
+        values.resetNotifiers(applyUrlParameters(urlParams) ?? planeList[0]);
         setState((() {
           isDataLoadNecessary = !success;
+          _inputKey = UniqueKey();
         }));
       });
     });
@@ -88,6 +92,90 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {});
       }
     });
+  }
+
+  void _showSettingsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Paramètres'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _pilotWeightController,
+              decoration: const InputDecoration(
+                labelText: 'Masse Pilote (kg)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+            const SizedBox(
+              height: 15.0,
+            ),
+            TextField(
+              controller: _parachuteWeightController,
+              decoration: const InputDecoration(
+                labelText: 'Masse Parachute (kg)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            )
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annuler'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              double? weight = double.tryParse(_pilotWeightController.text);
+              double? paraWeight =
+                  double.tryParse(_parachuteWeightController.text);
+              if (weight != null &&
+                  weight > 0 &&
+                  paraWeight != null &&
+                  paraWeight > 0) {
+                config.setPilotWeight(weight);
+                config.setParachuteWeight(paraWeight);
+                // Update pilot slot in current plane if exists
+                _applyConfigWeightToCurrentPlane(weight, paraWeight);
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Appliquer'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _applyConfigWeightToCurrentPlane(double weight, double paraWeight) {
+    for (var i = 0; i < values.values.length; i++) {
+      if (storedValues[currentPlane.name] != null) {
+        (storedValues[currentPlane.name])![currentPlane.nodes[i].name] =
+            values.values[i].value;
+      }
+    }
+    // Update only people section in cache
+    for (var item in planeList) {
+      for (var slot in item.getSlots()) {
+        if (slot.type == SlotType.people) {
+          storedValues[item.name]![slot.name] =
+              min(slot.max, max(slot.min ?? 0.0, weight + paraWeight));
+        }
+      }
+    }
+    // Load config from cache
+    for (var i = 0; i < values.values.length; i++) {
+      if (storedValues[currentPlane.name] != null) {
+        values.values[i].value =
+            (storedValues[currentPlane.name])![currentPlane.nodes[i].name]!;
+      }
+    }
   }
 
   @override
@@ -115,8 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     final fileName = result.files.first.name;
                     loadPlanesFromString(String.fromCharCodes(fileBytes!));
                     savePlanes(fileName, String.fromCharCodes(fileBytes));
-                    currentPlane = planeList[0];
-                    values.resetNotifiers(currentPlane);
+                    values.resetNotifiers(planeList[0]);
                     setState(() {
                       isDataLoadNecessary = false;
                       _inputKey = UniqueKey();
@@ -126,12 +213,17 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               color: saveS == SaveState.saved ? Colors.grey : Colors.red,
               icon: const Icon(Icons.save),
-              tooltip: 'Save the configuration',
+              tooltip: 'Enregistre',
               onPressed: () {
                 saveS = SaveState.saved;
                 saveXlsx(values, currentPlane.name);
                 setState(() {});
               },
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: 'Paramètres',
+              onPressed: _showSettingsDialog,
             ),
           ],
         ),
@@ -142,8 +234,8 @@ class _MyHomePageState extends State<MyHomePage> {
               for (Plane plane in planeList)
                 ListTile(
                   title: Text(plane.name),
+                  selected: plane.name == currentPlane.name,
                   onTap: () {
-                    // values.updateTot();
                     values.resetNotifiers(plane);
                     setState(() {
                       _inputKey = UniqueKey();
@@ -152,12 +244,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 )
             ])),
-        body: currentPlane.slots.isNotEmpty
+        body: currentPlane.nodes.isNotEmpty
             ? Column(
                 children: [
                       Column(
                           key: _inputKey,
-                          children: (currentPlane.slots
+                          children: (currentPlane
+                              .getSlots()
+                              .toList()
                               .asMap()
                               .entries
                               .map((s) => Input(
@@ -188,7 +282,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: Color.fromARGB(255, 255, 0, 0)))
                     ],
               )
-            : const Text("Pas de données chargées"));
+            : const Center(child: Text("Pas de données chargées")));
   }
 }
 
