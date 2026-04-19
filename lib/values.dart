@@ -42,6 +42,10 @@ class Plane {
   Iterable<Slot> getSlots() {
     return nodes.expand((n) => n.flattenNode()).whereType<Slot>();
   }
+
+  Iterable<Group> getGroups() {
+    return nodes.expand((n) => n.flattenNode()).whereType<Group>();
+  }
 }
 
 sealed class Node {
@@ -68,6 +72,17 @@ sealed class Node {
 
   List<Node> flattenNode() {
     return [this] + subnodes.expand((n) => n.flattenNode()).toList();
+  }
+
+  double nodeWeight(Map<Slot, double> mapping) {
+    return subnodes
+            .whereType<Slot>()
+            .map((s) => mapping[s] ?? 0.0)
+            .fold(0.0, (a, b) => a + b) +
+        subnodes
+            .whereType<Group>()
+            .map((g) => g.nodeWeight(mapping))
+            .fold(0.0, (a, b) => a + b);
   }
 }
 
@@ -150,6 +165,8 @@ double totalNmfuelMax = 0.0;
 double totalkgfuelMin = 0.0;
 double totalNmfuelMin = 0.0;
 
+List<String> groupAlerts = [];
+
 class Values {
   List<ValueNotifier<double>> values = List.empty(growable: true);
 
@@ -160,27 +177,28 @@ class Values {
     resetNotifiers(currentPlane);
   }
   void resetNotifiers(Plane plane) {
+    List<Slot> slotList = currentPlane.getSlots().toList();
     // Save current config to cache
     for (var i = 0; i < values.length; i++) {
       if (storedValues[currentPlane.name] != null) {
-        (storedValues[currentPlane.name])![currentPlane.nodes[i].name] =
-            values[i].value;
+        (storedValues[currentPlane.name])![slotList[i].name] = values[i].value;
       }
     }
 
     currentPlane = plane;
+    slotList = currentPlane.getSlots().toList();
     for (var v in values) {
       v.dispose();
     }
     values.clear();
-    values.addAll(plane.getSlots().map((s) => ValueNotifier(s.min ?? 0.0)));
+    values.addAll(slotList.map((s) => ValueNotifier(s.min ?? 0.0)));
     for (var v in values) {
       v.addListener(updateTot);
     }
     // Load config from cache
     for (var i = 0; i < values.length; i++) {
       if (storedValues[plane.name] != null) {
-        values[i].value = (storedValues[plane.name])![plane.nodes[i].name]!;
+        values[i].value = (storedValues[plane.name])![slotList[i].name]!;
       }
     }
     updateTot();
@@ -188,17 +206,30 @@ class Values {
 
   void updateTot() {
     List<Slot> slots = currentPlane.getSlots().toList();
+    Map<Slot, double> slotMapper = {};
     double tKg = currentPlane.mass;
     for (var i = 0; i < values.length; i++) {
-      tKg += values[i].value * getDensity(slots[i].type);
+      double v = values[i].value * getDensity(slots[i].type);
+      slotMapper[slots[i]] = v;
+      tKg += v;
     }
+
+    groupAlerts = currentPlane
+        .getGroups()
+        .where((g) => g.max != null)
+        .map((g) {
+          double w = g.nodeWeight(slotMapper);
+          return g.max! < w
+              ? "le groupe '${g.name}' pèse $w kg (masse max ${g.max}kg)"
+              : null;
+        })
+        .whereType<String>()
+        .toList();
 
     double tNm = currentPlane.mass * currentPlane.leverArm;
 
     for (var i = 0; i < values.length; i++) {
-      tNm += values[i].value *
-          slots[i].leverArm *
-          getDensity(currentPlane.getSlots().elementAt(i).type);
+      tNm += values[i].value * slots[i].leverArm * getDensity(slots[i].type);
     }
     tNm = (tNm / tKg * 10000).round() / 10000;
 

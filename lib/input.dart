@@ -47,12 +47,16 @@ class _InputState extends State<Input> {
                 SizedBox(
                     width: (MediaQuery.of(context).size.width) - 155,
                     child: Slider(
-                        value: min(widget.max, max(widget.min, _val)),
-                        onChanged: onSliderChanged,
-                        min: widget.min,
-                        max: widget.max,
-                        divisions:
-                            ((widget.max - widget.min) / widget.step).floor())),
+                      value: min(widget.max, max(widget.min, _val)),
+                      onChanged: onSliderChanged,
+                      min: widget.min,
+                      max: widget.max,
+                      divisions:
+                          ((widget.max - widget.min) / widget.step).floor(),
+                      activeColor: widget.unit == "L"
+                          ? Colors.blue.shade900
+                          : Colors.amber.shade900,
+                    )),
                 SizedBox(
                     width: 93,
                     child: Text(

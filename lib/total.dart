@@ -33,18 +33,31 @@ class _TotalLabelState extends State<TotalLabel> {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-        child: Text(
-          "masse : " +
-              ((widget.valtotkg.value * 10).round() / 10).toString() +
-              " kg, centre de gravité : " +
-              ((widget.valtotNm.value * 1000).round() / 1000).toString() +
-              " m",
-          style: TextStyle(
-              color: inlimitsConvex() ? Colors.black : Colors.red,
-              fontWeight:
-                  inlimitsConvex() ? FontWeight.normal : FontWeight.bold),
-          textAlign: TextAlign.center,
-        ));
+        child: Column(
+            children: [
+                  Text(
+                    "masse : " +
+                        ((widget.valtotkg.value * 10).round() / 10).toString() +
+                        " kg, centre de gravité : " +
+                        ((widget.valtotNm.value * 1000).round() / 1000)
+                            .toString() +
+                        " m",
+                    style: TextStyle(
+                        color: inlimitsConvex() ? Colors.black : Colors.red,
+                        fontWeight: inlimitsConvex()
+                            ? FontWeight.normal
+                            : FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  )
+                ] +
+                groupAlerts
+                    .map((a) => Text(
+                          a,
+                          style: const TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ))
+                    .toList()));
   }
 
   bool inlimits() {
