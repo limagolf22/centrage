@@ -221,6 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             IconButton(
+              color: Colors.grey,
               icon: const Icon(Icons.settings),
               tooltip: 'Paramètres',
               onPressed: _showSettingsDialog,
