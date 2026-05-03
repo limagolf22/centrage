@@ -8,17 +8,14 @@ import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 
-
 String impDir = "";
 String expDir = "";
 
 final loggerSave = Logger("Save");
 
 Future<void> getImportDir() async {
-  if(kIsWeb){
-
-  }
-  else if (Platform.isAndroid) {
+  if (kIsWeb) {
+  } else if (Platform.isAndroid) {
     var directory = await getExternalStorageDirectory();
     impDir = directory!.path;
     loggerSave.fine("import dir : " + impDir);
@@ -32,10 +29,8 @@ Future<void> getImportDir() async {
 }
 
 Future<void> getExportDir() async {
-  if(kIsWeb){
-
-  }
-  else if (Platform.isAndroid) {
+  if (kIsWeb) {
+  } else if (Platform.isAndroid) {
     var directory = await getExternalStorageDirectory();
     expDir = directory!.path;
     loggerSave.fine("export dir : " + expDir);
@@ -50,7 +45,7 @@ Future<void> getExportDir() async {
 /// Loads Planes Files. Returns [true] if they are loaded from an
 /// imported file, and [false] if datas come from internal storage.
 Future<bool> loadPlanesFile() async {
-if (impDir != "" && File(impDir + "/datas/ATVV.yaml").existsSync()) {
+  if (impDir != "" && File(impDir + "/datas/ATVV.yaml").existsSync()) {
     loggerSave.fine("init load done from datas");
     File file = File(impDir + "/datas/ATVV.yaml");
     String content = await file.readAsString();
@@ -107,7 +102,7 @@ Future<void> saveXlsxWithInt8List(
     sheetObject.cell(CellIndex.indexByString("B" + (8 + i).toString())).value =
         slot.name;
     sheetObject.cell(CellIndex.indexByString("C" + (8 + i).toString())).value =
-        val.values[i].value * getDensity(slot.type) ;
+        val.values[i].value * getDensity(slot.type);
     sheetObject.cell(CellIndex.indexByString("D" + (8 + i).toString())).value =
         slot.leverArm;
     sheetObject
@@ -150,6 +145,14 @@ Future<void> saveXlsxWithInt8List(
     var gabY =
         sheetObject.cell(CellIndex.indexByString("D" + (49 + i).toString()));
     gabY.value = currentPlane.gabarit[i].y;
+  }
+
+  if (groupAlerts.isNotEmpty) {
+    var alarms = sheetObject.cell(CellIndex.indexByString("A5"));
+    alarms.value = groupAlerts.join(",");
+    alarms.cellStyle = CellStyle(
+      fontColorHex: "#FF0000", //  "#1AFF1A",
+    );
   }
 
   var fileBytes = excel.save();

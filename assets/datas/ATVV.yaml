@@ -76,13 +76,48 @@ D-5774-18m:
           type: weight
           leverArm: -0.150
           max: 5.0
-        - name: ballast aile
-          type: water
-          leverArm: 0.270
-          max: 190.0
         - name: ballast queue
           type: water
           leverArm: 4.230
           max: 12.0
+    - name: ballast aile
+      type: water
+      leverArm: 0.270
+      max: 190.0
   mass: 280.0
   leverArm: 0.625
+
+F-CFAT:
+  gabarit:
+    - x: 0.03
+      y: 380
+    - x: 0.03
+      y: 620
+    - x: 0.3
+      y: 620
+    - x: 0.3
+      y: 380
+  slots:
+    - name: masses non portantes
+      max: 440.0 #tbd
+      subnodes:
+        - name: gueuse avant  
+          type: weight
+          leverArm: -1.650
+          max: 10.0
+          unit: 0.5
+        - name: pilote
+          type: people
+          leverArm: -1.3
+          min: 70.0
+          max: 110.0
+        - name: copilote
+          type: people
+          leverArm: -0.190
+          max: 110.0
+    - name: ballast aile
+      type: water
+      leverArm: 0.270 #tbd
+      max: 170.0
+  mass: 380.0
+  leverArm: 0.943
