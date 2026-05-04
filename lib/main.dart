@@ -154,15 +154,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _applyConfigWeightToCurrentPlane(double weight, double paraWeight) {
+    List<Slot> slotList = currentPlane.getSlots().toList();
     for (var i = 0; i < values.values.length; i++) {
       if (storedValues[currentPlane.name] != null) {
-        (storedValues[currentPlane.name])![currentPlane.nodes[i].name] =
+        (storedValues[currentPlane.name])![slotList[i].name] =
             values.values[i].value;
       }
     }
     // Update only people section in cache
     for (var item in planeList) {
-      for (var slot in item.getSlots()) {
+      for (var slot in slotList) {
         if (slot.type == SlotType.people) {
           storedValues[item.name]![slot.name] =
               min(slot.max, max(slot.min ?? 0.0, weight + paraWeight));
@@ -173,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
     for (var i = 0; i < values.values.length; i++) {
       if (storedValues[currentPlane.name] != null) {
         values.values[i].value =
-            (storedValues[currentPlane.name])![currentPlane.nodes[i].name]!;
+            (storedValues[currentPlane.name])![slotList[i].name]!;
       }
     }
   }

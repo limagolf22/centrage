@@ -1,6 +1,8 @@
 import 'dart:math';
+import 'package:centrage/suggestion.dart';
 import 'package:flutter/foundation.dart';
 import 'package:centrage/config.dart';
+import 'package:poly_collisions/poly_collisions.dart';
 
 enum SlotType { avgas, jetA1, water, people, weight }
 
@@ -45,6 +47,18 @@ class Plane {
 
   Iterable<Group> getGroups() {
     return nodes.expand((n) => n.flattenNode()).whereType<Group>();
+  }
+
+  (double, double) computeCentrage(List<double> values) {
+    List<Slot> slots = getSlots().toList();
+    double kg = mass;
+    double mkg = leverArm * mass;
+    for (var i = 0; i < values.length; i++) {
+      double m = values[i] * getDensity(slots[i].type);
+      kg += m;
+      mkg += m * slots[i].leverArm;
+    }
+    return (kg, mkg / kg);
   }
 }
 
@@ -165,7 +179,9 @@ double totalNmfuelMax = 0.0;
 double totalkgfuelMin = 0.0;
 double totalNmfuelMin = 0.0;
 
+bool isInBounds = false;
 List<String> groupAlerts = [];
+List<String> balanceSuggestions = [];
 
 class Values {
   List<ValueNotifier<double>> values = List.empty(growable: true);
@@ -233,40 +249,35 @@ class Values {
     }
     tNm = (tNm / tKg * 10000).round() / 10000;
 
-    totalkgfuelMax = currentPlane.mass;
-    totalkgfuelMin = currentPlane.mass;
-    for (var i = 0; i < values.length; i++) {
-      totalkgfuelMax += ((slots[i].type == SlotType.weight ||
-                  slots[i].type == SlotType.people)
-              ? values[i].value
-              : slots[i].max) *
-          getDensity(slots[i].type);
-      totalkgfuelMin += ((slots[i].type == SlotType.weight ||
-                  slots[i].type == SlotType.people)
-              ? values[i].value
-              : slots[i].min ?? 0.0) *
-          getDensity(slots[i].type);
-    }
+    List<double> minFuelValues = Iterable.generate(values.length)
+        .map((i) => ((slots[i].type == SlotType.weight ||
+                slots[i].type == SlotType.people)
+            ? values[i].value
+            : (slots[i].min ?? 0.0)))
+        .toList();
+    (double, double) minCentrage = currentPlane.computeCentrage(minFuelValues);
+    totalkgfuelMin = (minCentrage.$1 * 10000).round() / 10000;
+    totalNmfuelMin = (minCentrage.$2 * 10000).round() / 10000;
 
-    totalNmfuelMax = currentPlane.mass * currentPlane.leverArm;
-    totalNmfuelMin = currentPlane.mass * currentPlane.leverArm;
-    for (var i = 0; i < values.length; i++) {
-      totalNmfuelMax += ((slots[i].type == SlotType.weight ||
-                  slots[i].type == SlotType.people)
-              ? values[i].value
-              : slots[i].max) *
-          slots[i].leverArm *
-          getDensity(slots[i].type);
-      totalNmfuelMin += ((slots[i].type == SlotType.weight ||
-                  slots[i].type == SlotType.people)
-              ? values[i].value
-              : slots[i].min ?? 0.0) *
-          slots[i].leverArm *
-          getDensity(slots[i].type);
-    }
-    totalNmfuelMax = (totalNmfuelMax / totalkgfuelMax * 10000).round() / 10000;
-    totalNmfuelMin = (totalNmfuelMin / totalkgfuelMin * 10000).round() / 10000;
+    List<double> maxFuelValues = Iterable.generate(values.length)
+        .map((i) => ((slots[i].type == SlotType.weight ||
+                slots[i].type == SlotType.people)
+            ? values[i].value
+            : slots[i].max))
+        .toList();
+    (double, double) maxCentrage = currentPlane.computeCentrage(maxFuelValues);
+    totalkgfuelMax = (maxCentrage.$1 * 10000).round() / 10000;
+    totalNmfuelMax = (maxCentrage.$2 * 10000).round() / 10000;
 
+    if (PolygonCollision.isPointInPolygon(
+        currentPlane.gabarit, Point(tNm, tKg))) {
+      isInBounds = true;
+      balanceSuggestions = [];
+    } else {
+      isInBounds = false;
+      balanceSuggestions = generateSuggestions(
+          values.map((v) => v.value).toList(), currentPlane);
+    }
     totalkg.value = tKg;
     totalNm.value = tNm;
   }

@@ -58,21 +58,38 @@ class _InputState extends State<Input> {
                           : Colors.amber.shade900,
                     )),
                 SizedBox(
-                    width: 93,
+                    width: 40,
+                    child: TextFormField(
+                      textAlign: TextAlign.end,
+                      keyboardType: TextInputType.number,
+                      validator: validateFieldValue,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      onFieldSubmitted: (value) {
+                        onSliderChanged(double.tryParse(value) ?? 0.0);
+                      },
+                      onEditingComplete: () {
+                        onSliderChanged(widget.valNot.value);
+                      },
+                      controller: TextEditingController()
+                        ..text = widget.valNot.value.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      decoration: const InputDecoration(
+                          errorStyle: TextStyle(fontSize: 10.0)),
+                    )),
+                SizedBox(
+                    width: 53,
                     child: Text(
-                        _val.toString() +
-                            " " +
-                            widget.unit +
-                            (widget.unit == "L"
-                                ? ((_val / widget.max * 100).round() == 100
-                                    ? " (full)"
-                                    : " (" +
-                                        (_val / widget.max * 100)
-                                            .round()
-                                            .toString() +
-                                        "%)")
-                                : ""),
-                        textAlign: TextAlign.left))
+                      widget.unit +
+                          (widget.unit == "L"
+                              ? ((_val / widget.max * 100).round() == 100
+                                  ? " (full)"
+                                  : " (" +
+                                      (_val / widget.max * 100)
+                                          .round()
+                                          .toString() +
+                                      "%)")
+                              : ""),
+                    ))
               ])
         : Container();
   }
@@ -84,5 +101,12 @@ class _InputState extends State<Input> {
   void refresh() {
     _val = widget.valNot.value;
     setState(() {});
+  }
+
+  String? validateFieldValue(String? val) {
+    double? parsed = double.tryParse(val ?? "");
+    return parsed != null
+        ? ((parsed < widget.min || parsed > widget.max) ? null : null)
+        : "invalide";
   }
 }
