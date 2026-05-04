@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:centrage/values.dart';
 import 'package:flutter/material.dart';
-import 'package:poly_collisions/poly_collisions.dart';
 
 class Chart extends StatefulWidget {
   final ValueNotifier<double> totalkg;
@@ -149,11 +148,8 @@ class ChartPainter extends CustomPainter {
     textPainterFull.paint(canvas, maxFuelOffset + const Offset(0, -14));
     textPainterEmpty.paint(canvas, minFuelOffset + const Offset(-8, 0));
 
-    bool isInPolygon = PolygonCollision.isPointInPolygon(
-        currentPlane.gabarit, Point(totalNm.value, totalkg.value));
-
-    paint.color = isInPolygon ? Colors.amber : Colors.red;
-    paint.strokeWidth = isInPolygon ? 2.5 : 4;
+    paint.color = isInBounds ? Colors.amber : Colors.red;
+    paint.strokeWidth = isInBounds ? 2.5 : 4;
     canvas.drawLine(Offset(centragePoint.dx - 5, centragePoint.dy - 5),
         Offset(centragePoint.dx + 5, centragePoint.dy + 5), paint);
     canvas.drawLine(Offset(centragePoint.dx + 5, centragePoint.dy - 5),
